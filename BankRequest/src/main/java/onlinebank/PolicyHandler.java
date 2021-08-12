@@ -17,21 +17,21 @@ public class PolicyHandler{
 
         if(!authCancelled.validate()) return;    
         requestRepository.deleteById( authCancelled.getBankRequestId() );
-        System.out.println("\n\n\nBankRequest.PolicyHandler.20\n##############################################" + 
-                            "\n" + authCancelled.getRequestName() + " Request Cancelled" + 
-                            "\nAuthentication Failed" + 
-                            "\n##############################################\n\n\n" );
-        System.out.println("BankRequest.PolicyHandler.24\n##### listener CancelBankAuthentication : " + authCancelled.toJson() + "\n\n");
+        System.out.println("\nBankRequest.PolicyHandler.20\n##############################################" + 
+                           "\n" + authCancelled.getRequestName() + " Request Cancelled" + 
+                           "\nAuthentication Failed" + 
+                           "\n##############################################\n" );
+        System.out.println("BankRequest.PolicyHandler.24\n##### listener CancelBankAuthentication : " + authCancelled.toJson() + "\n");
     }
 
     @StreamListener(KafkaProcessor.INPUT)
     public void wheneverAccountRequestCompleted_CompleteBankRequest(@Payload AccountRequestCompleted accountRequestCompleted){
         if(!accountRequestCompleted.validate()) return;
-        System.out.println("\n\n\nBankRequest.PolicyHandler.30\n##############################################" + 
-                            "\n" + accountRequestCompleted.getRequestName() + " Request Completed" + 
-                            "\nbalance : " + accountRequestCompleted.getAmountOfMoney() + " Won" +
-                            "\n##############################################\n\n\n" );
-        System.out.println("BankRequest.PolicyHandler.34\n##### listener CompleteBankRequest : " + accountRequestCompleted.toJson() + "\n\n");
+        System.out.println("\nBankRequest.PolicyHandler.30\n##############################################" + 
+                           "\n" + accountRequestCompleted.getRequestName() + " Request Completed" + 
+                           "\nbalance : " + accountRequestCompleted.getAmountOfMoney() + " Won" +
+                           "\n##############################################\n" );
+        System.out.println("BankRequest.PolicyHandler.34\n##### listener CompleteBankRequest : " + accountRequestCompleted.toJson() + "\n");
 
     }
 
@@ -40,21 +40,21 @@ public class PolicyHandler{
 
         if(!accountRequestCancelled.validate()) return;
         requestRepository.deleteById( accountRequestCancelled.getBankRequestId() );
-        System.out.println("\n\n\nBankRequest.PolicyHandler.43\n##############################################" + 
-                            "\n" + accountRequestCancelled.getRequestName() + " Request Cancelled" + 
-                            "\nmessage : " + accountRequestCancelled.getMessage() + 
-                            "\n##############################################\n\n\n" );
-        System.out.println("BankRequest.PolicyHandler.47\n##### listener CancelBankRequest : " + accountRequestCancelled.toJson() + "\n\n");
+        System.out.println("\nBankRequest.PolicyHandler.43\n##############################################" + 
+                           "\n" + accountRequestCancelled.getRequestName() + " Request Cancelled" + 
+                           "\nmessage : " + accountRequestCancelled.getMessage() + 
+                           "\n##############################################\n" );
+        System.out.println("BankRequest.PolicyHandler.47\n##### listener CancelBankRequest : " + accountRequestCancelled.toJson() + "\n");
     }
 
     @StreamListener(KafkaProcessor.INPUT)
     public void wheneverHistoryShown_CompleteTransactionRequest(@Payload HistoryShown historyShown){
 
         if(!historyShown.validate()) return;
-        System.out.println("\n\n\nBankRequest.PolicyHandler.54\n##############################################" + 
-                            "\nTransaction History Shown " + 
-                            "\n##############################################\n\n\n" );
-        System.out.println("BankRequest.PolicyHandler.57\n##### listener CompleteTransactionRequest : " + historyShown.toJson() + "\n\n");
+        System.out.println("\nBankRequest.PolicyHandler.54\n##############################################" + 
+                           "\nTransaction History Shown " + 
+                           "\n##############################################\n" );
+        System.out.println("BankRequest.PolicyHandler.57\n##### listener CompleteTransactionRequest : " + historyShown.toJson() + "\n");
         
     }
 }

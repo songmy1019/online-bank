@@ -24,10 +24,10 @@ public class Request {
     @PostPersist
     public void onPostPersist(){
 
-        System.out.println("\n\n\n#########################################################################");
+        System.out.println("\nBankRequest.Request.27#########################################################################");
         System.out.println("requestId : " + getRequestId() ) ;    
         System.out.println("\nrequestName : " + getRequestName() ) ;      
-        System.out.println("#########################################################################\n\n\n");
+        System.out.println("#########################################################################\n");
         
         // requestId
         // "01" : Deposit

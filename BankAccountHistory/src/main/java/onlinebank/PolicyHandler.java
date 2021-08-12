@@ -20,10 +20,10 @@ public class PolicyHandler{
         if(!transactionRequested.validate()) return;
         HistoryShown historyShown = new HistoryShown();
 
-        System.out.println("\n\n\nBankAccountHistory.PolicyHandler.23\n##############################################");
+        System.out.println("\nBankAccountHistory.PolicyHandler.23\n##############################################");
         System.out.println("ShowHistory");
-        System.out.println("##############################################\n\n\n");
-        System.out.println("\n\nBankAccountHistory.PolicyHandler.26\n##### transactionRequested ShowHistory : " + transactionRequested.toJson() + "\n\n");
+        System.out.println("##############################################\n");
+        System.out.println("\nBankAccountHistory.PolicyHandler.26\n##### transactionRequested ShowHistory : " + transactionRequested.toJson() + "\n");
 
         historyShown.setListHistory(historyRepository.findByAccountNo(transactionRequested.getAccountNo()));
         historyShown.publish();
@@ -33,10 +33,10 @@ public class PolicyHandler{
 
         if(!accountRequestCompleted.validate()) return;
 
-        System.out.println("\n\n\nBankAccountHistory.PolicyHandler.36\n##############################################");
+        System.out.println("\nBankAccountHistory.PolicyHandler.36\n##############################################");
         System.out.println("AddHistory");
-        System.out.println("##############################################\n\n\n");
-        System.out.println("\n\nBankAccount.PolicyHandler.39\n##### listener AddHistory : " + accountRequestCompleted.toJson() + "\n\n");
+        System.out.println("##############################################\n");
+        System.out.println("\nBankAccount.PolicyHandler.39\n##### listener AddHistory : " + accountRequestCompleted.toJson() + "\n");
 
         if( "01".equals( accountRequestCompleted.getRequestId() ) ||  // Deposit
             "02".equals( accountRequestCompleted.getRequestId() ) ){  // Withdraw

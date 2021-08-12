@@ -36,11 +36,11 @@ public class Auth {
             authResult = true ;
         }
 
-        System.out.println("\n\n\nBankAuthentication.Auth.39\n###############################################");
+        System.out.println("\nBankAuthentication.Auth.39\n###############################################");
         System.out.println("requestId : " + authResult) ;
         System.out.println("requestName : " + getRequestId()) ;
         System.out.println("authResult : " + getRequestName()) ;
-        System.out.println("###############################################\n\n\n");
+        System.out.println("###############################################\n");
 
         if( authResult == false ){
             AuthCancelled authCancelled = new AuthCancelled();
