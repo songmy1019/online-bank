@@ -37,9 +37,9 @@ public class Auth {
         }
 
         System.out.println("\nBankAuthentication.Auth.39\n###############################################");
-        System.out.println("requestId : " + authResult) ;
-        System.out.println("requestName : " + getRequestId()) ;
-        System.out.println("authResult : " + getRequestName()) ;
+        System.out.println("authResult : " + authResult) ;
+        System.out.println("requestId : " + getRequestId()) ;
+        System.out.println("requestName : " + getRequestName()) ;
         System.out.println("###############################################\n");
 
         if( authResult == false ){

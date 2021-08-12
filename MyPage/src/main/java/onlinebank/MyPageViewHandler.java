@@ -48,14 +48,13 @@ public class MyPageViewHandler {
         try {
             if (!accountRequestCancelled.validate()) return;
             System.out.println("\nMyPage.MyPageViewHandler.50\n##############################################");
-            System.out.println("UPDATE when accountRequestCompleted");
+            System.out.println("UPDATE when accountRequestCancelled");
             System.out.println("##############################################\n");
             System.out.println("\nMyPage.MyPageViewHandler.53\n##### listener accountRequestCancelled : " + accountRequestCancelled.toJson() + "\n");   
                         
             // 요청 취소의 경우 계좌가 존재하는 경우에만 상태변경
             MyPage myPage = myPageRepository.findByAccountNo( accountRequestCancelled.getAccountNo() );
             if( myPage != null ){  
-                myPage = new MyPage();
                 myPage.setAccountNo( accountRequestCancelled.getAccountNo() );
                 myPage.setLastModifiedDate( new Date() );
                 myPage.setLastRequestId( accountRequestCancelled.getRequestId() );
