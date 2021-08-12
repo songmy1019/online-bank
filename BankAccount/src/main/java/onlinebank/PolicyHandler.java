@@ -65,8 +65,7 @@ public class PolicyHandler{
     public void wheneverAuthCertified_RecieveAccountRequest(@Payload AuthCertified authCertified){
 
         if(!authCertified.validate()) return;
-        System.out.println("\n\n##### listener RecieveAccountRequest : " + authCertified.toJson() + "\n\n");   
-
+        
         // 입금처리( RequestId : Deposit )
         if( "01".equals( authCertified.getRequestId() ) ){
 
@@ -231,6 +230,7 @@ public class PolicyHandler{
                 Account account = accountRepository.findByAccountNo( authCertified.getAccountNo() );
                 accountRepository.deleteById(account.getId());
             }
+            System.out.println("\n\n##### listener RecieveAccountRequest : " + authCertified.toJson() + "\n\n");   
         }  
     }
 

@@ -22,15 +22,6 @@ public class MyPageViewHandler {
         try {
             if (!accountRequestCompleted.validate()) return;
             System.out.println("\n\n##### listener accountRequestCompleted : " + accountRequestCompleted.toJson() + "\n\n");   
-            // view 객체 조회
-            //List<MyPage> myPageList = myPageRepository.findByAccountNo(accountRequestCompleted.getAccountNo());
-            //for(MyPage myPage : myPageList){
-            // view 객체에 이벤트의 eventDirectValue 를 set 함
-            //myPage.setAccountStatus(accountRequestCompleted.getRequestNo());
-            //myPage.setRequestNm완료(accountRequestCompleted.getRequestNo());
-            //myPage.setLastUpdate(accountRequestCompleted.getRegDate());
-            // view 레파지 토리에 save
-            //myPageRepository.save(myPage);
 
             MyPage myPage = myPageRepository.findByAccountNo( accountRequestCompleted.getAccountNo() );
             if( myPage == null ) myPage = new MyPage();            

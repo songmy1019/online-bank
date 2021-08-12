@@ -21,7 +21,7 @@ public class PolicyHandler{
                             "\n" + authCancelled.getRequestName() + " Request Cancelled" + 
                             "\nAuthentication Failed" + 
                             "\n##############################################\n\n\n" );
-        System.out.println("\n\n##### listener CancelBankAuthentication : " + authCancelled.toJson() + "\n\n");
+        System.out.println("##### listener CancelBankAuthentication : " + authCancelled.toJson() + "\n\n");
     }
 
     @StreamListener(KafkaProcessor.INPUT)
@@ -31,7 +31,7 @@ public class PolicyHandler{
                             "\n" + accountRequestCompleted.getRequestName() + " Request Completed" + 
                             "\nbalance : " + accountRequestCompleted.getAmountOfMoney() + " Won" +
                             "\n##############################################\n\n\n" );
-        System.out.println("\n\n##### listener CompleteBankRequest : " + accountRequestCompleted.toJson() + "\n\n");
+        System.out.println("##### listener CompleteBankRequest : " + accountRequestCompleted.toJson() + "\n\n");
 
     }
 
@@ -44,7 +44,7 @@ public class PolicyHandler{
                             "\n" + accountRequestCancelled.getRequestName() + " Request Cancelled" + 
                             "\nmessage : " + accountRequestCancelled.getMessage() + 
                             "\n##############################################\n\n\n" );
-        System.out.println("\n\n##### listener CancelBankRequest : " + accountRequestCancelled.toJson() + "\n\n");
+        System.out.println("##### listener CancelBankRequest : " + accountRequestCancelled.toJson() + "\n\n");
     }
 
     @StreamListener(KafkaProcessor.INPUT)
@@ -54,7 +54,7 @@ public class PolicyHandler{
         System.out.println("\n\n\n##############################################" + 
                             "\nTransaction History Shown" + 
                             "\n##############################################\n\n\n" );
-        System.out.println("\n\n##### listener CompleteTransactionRequest : " + historyShown.toJson() + "\n\n");
+        System.out.println("##### listener CompleteTransactionRequest : " + historyShown.toJson() + "\n\n");
         
     }
 }
