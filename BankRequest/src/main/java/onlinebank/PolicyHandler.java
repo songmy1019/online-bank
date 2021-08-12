@@ -52,7 +52,7 @@ public class PolicyHandler{
 
         if(!historyShown.validate()) return;
         System.out.println("\n\n\n##############################################" + 
-                            "\nTransaction History Shown" + 
+                            "\nTransaction History Shown " + 
                             "\n##############################################\n\n\n" );
         System.out.println("##### listener CompleteTransactionRequest : " + historyShown.toJson() + "\n\n");
         

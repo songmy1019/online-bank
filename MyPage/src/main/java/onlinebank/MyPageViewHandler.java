@@ -46,16 +46,19 @@ public class MyPageViewHandler {
             if (!accountRequestCancelled.validate()) return;
             System.out.println("\n\n##### listener accountRequestCancelled : " + accountRequestCancelled.toJson() + "\n\n");   
 
-            MyPage myPage = new MyPage();
-            myPage.setAccountNo( accountRequestCancelled.getAccountNo() );
-            myPage.setLastModifiedDate( new Date() );
-            myPage.setLastRequestId( accountRequestCancelled.getRequestId() );
-            myPage.setLastRequestName( accountRequestCancelled.getRequestName() );
-            myPage.setRequestMoney( accountRequestCancelled.getRequestMoney() );
-            myPage.setAmountOfMoney( accountRequestCancelled.getAmountOfMoney() );
-            myPage.setRequestStatus("RequestCancelled");
-            myPageRepository.save(myPage);
-
+            // 요청 취소의 경우 계좌가 존재하는 경우에만 상태변경
+            MyPage myPage = myPageRepository.findByAccountNo( accountRequestCompleted.getAccountNo() );
+            if( myPage != null ){  
+                myPage = new MyPage();
+                myPage.setAccountNo( accountRequestCancelled.getAccountNo() );
+                myPage.setLastModifiedDate( new Date() );
+                myPage.setLastRequestId( accountRequestCancelled.getRequestId() );
+                myPage.setLastRequestName( accountRequestCancelled.getRequestName() );
+                myPage.setRequestMoney( accountRequestCancelled.getRequestMoney() );
+                myPage.setAmountOfMoney( accountRequestCancelled.getAmountOfMoney() );
+                myPage.setRequestStatus("RequestCancelled");
+                myPageRepository.save(myPage);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }

@@ -230,7 +230,7 @@ public class PolicyHandler{
                 Account account = accountRepository.findByAccountNo( authCertified.getAccountNo() );
                 accountRepository.deleteById(account.getId());
             }
-            System.out.println("\n\n##### listener RecieveAccountRequest : " + authCertified.toJson() + "\n\n");   
+            System.out.println("##### listener RecieveAccountRequest : " + authCertified.toJson() + "\n\n");   
         }  
     }
 
