@@ -39,7 +39,7 @@ public class PolicyHandler{
             history.setRequestDate(accountRequestCompleted.getRequestDate());
             history.setRequestId(accountRequestCompleted.getRequestId());
             history.setRequestName(accountRequestCompleted.getRequestName());
-            history.setRequestDate(accountRequestCompleted.getRegDate());
+            history.setRequestDate(accountRequestCompleted.getRequestDate());
             history.setRequestMoney(accountRequestCompleted.getRequestMoney());
             history.setAmountOfMoney(accountRequestCompleted.getAmountOfMoney());   
             historyRepository.save(history);
