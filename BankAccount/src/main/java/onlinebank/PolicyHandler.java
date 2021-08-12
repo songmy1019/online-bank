@@ -20,12 +20,11 @@ public class PolicyHandler{
     public void wheneverBalanceRequested_RecieveAccountRequest(@Payload BalanceRequested balanceRequested){
 
         if(!balanceRequested.validate()) return;
-        System.out.println("\n\n##### listener RecieveAccountRequest : " + balanceRequested.toJson() + "\n\n");
+        System.out.println("\n\nBankAccount.PolicyHandler.23\n##### listener RecieveAccountRequest : " + balanceRequested.toJson());
         
-        //if( BalanceRequested.isMe() ){ System.out.println("isMe Test");}
         // 조회계좌가 없을 경우 
         if( accountRepository.findByAccountNo( balanceRequested.getAccountNo() ) == null ){
-            System.out.println("\n\n\n##############################################");
+            System.out.println("\n\n\nBankAccount.PolicyHandler.27\n##############################################");
             System.out.println("Balance : Account Not Exist");
             System.out.println("accountRequestCancelled");
             System.out.println("##############################################\n\n\n");
@@ -42,7 +41,7 @@ public class PolicyHandler{
         }
         // 조회계좌가 있을 경우
         else{
-            System.out.println("\n\n\n##############################################");
+            System.out.println("\n\n\nBankAccount.PolicyHandler.44\n##############################################");
             System.out.println("Balance : Account Exist");
             System.out.println("accountRequestCompleted");
             System.out.println("##############################################\n\n\n");
@@ -71,7 +70,7 @@ public class PolicyHandler{
 
            // 입금계좌가 없을 경우 
            if( accountRepository.findByAccountNo( authCertified.getAccountNo() ) == null ){
-               System.out.println("\n\n\n##############################################");
+               System.out.println("\n\n\nBankAccount.PolicyHandler.73\n##############################################");
                System.out.println("Deposit : Account Not Exist");
                System.out.println("accountRequestCancelled");
                System.out.println("##############################################\n\n\n");
@@ -90,7 +89,7 @@ public class PolicyHandler{
            }
            // 입금계좌가 있을 경우
            else{
-               System.out.println("\n\n\n##############################################");
+               System.out.println("\n\n\nBankAccount.PolicyHandler.92\n##############################################");
                System.out.println("Deposit : Account Exist");
                System.out.println("accountRequestCompleted");
                System.out.println("##############################################\n\n\n");
@@ -109,7 +108,7 @@ public class PolicyHandler{
         if( "02".equals( authCertified.getRequestId() ) ){
             // 출금계좌가 없을 경우 
             if( accountRepository.findByAccountNo( authCertified.getAccountNo() ) == null ){
-                System.out.println("\n\n\n##############################################");
+                System.out.println("\n\n\nBankAccount.PolicyHandler.111\n##############################################");
                 System.out.println("Withdraw : Account Not Exist");
                 System.out.println("accountRequestCancelled");
                 System.out.println("##############################################\n\n\n");
@@ -127,7 +126,7 @@ public class PolicyHandler{
             }
             // 출금계좌가 있을 경우
             else{
-                System.out.println("\n\n\n##############################################");
+                System.out.println("\n\n\nBankAccount.PolicyHandler.129\n##############################################");
                 System.out.println("Withdraw : Account Exist");
                 System.out.println("accountRequestCompleted");
                 System.out.println("##############################################\n\n\n");
@@ -145,7 +144,7 @@ public class PolicyHandler{
                     accountRepository.save(account);
                 }
                 else{
-                    System.out.println("\n\n\n##############################################");
+                    System.out.println("\n\n\nBankAccount.PolicyHandler.147\n##############################################");
                     System.out.println("Withdraw : Account Exist But Not Sufficient Money");
                     System.out.println("accountRequestCancelled");
                     System.out.println("##############################################\n\n\n");
@@ -167,7 +166,7 @@ public class PolicyHandler{
         if( "05".equals( authCertified.getRequestId() ) ){
             // 계좌가 존재하지 않을 경우
             if( accountRepository.findByAccountNo( authCertified.getAccountNo() ) == null ){
-                System.out.println("\n\n\n##############################################");
+                System.out.println("\n\n\nBankAccount.PolicyHandler.169\n##############################################");
                 System.out.println("Add Acount : Account Not Exist");
                 System.out.println("accountRequestCompleted");
                 System.out.println("##############################################\n\n\n");
@@ -185,7 +184,7 @@ public class PolicyHandler{
             }
             // 계좌가 존재하는 경우
             else{
-                System.out.println("\n\n\n##############################################");
+                System.out.println("\n\n\nBankAccount.PolicyHandler.187\n##############################################");
                 System.out.println("Add Account : Account Exist");
                 System.out.println("accountRequestCancelled");
                 System.out.println("##############################################\n\n\n");
@@ -205,7 +204,7 @@ public class PolicyHandler{
         if( "06".equals( authCertified.getRequestId() ) ){
             // 삭제 대상 계좌가 없을 경우
             if( accountRepository.findByAccountNo( authCertified.getAccountNo() ) == null ){
-                System.out.println("\n\n\n##############################################");
+                System.out.println("\n\n\nBankAccount.PolicyHandler.207\n##############################################");
                 System.out.println("Delete Account : Account Not Exist");
                 System.out.println("accountRequestCancelled");
                 System.out.println("##############################################\n\n\n");
@@ -222,7 +221,7 @@ public class PolicyHandler{
             }
             // 삭제 대상 계좌가 있을 경우
             else{
-                System.out.println("\n\n\n##############################################");
+                System.out.println("\n\n\nBankAccount.PolicyHandler.224\n##############################################");
                 System.out.println("Delete Account : Account Exist");
                 System.out.println("accountRequestCompleted");
                 System.out.println("##############################################\n\n\n");
@@ -230,7 +229,7 @@ public class PolicyHandler{
                 Account account = accountRepository.findByAccountNo( authCertified.getAccountNo() );
                 accountRepository.deleteById(account.getId());
             }
-            System.out.println("##### listener RecieveAccountRequest : " + authCertified.toJson() + "\n\n");   
+            System.out.println("BankAccount.PolicyHandler.232\n##### listener RecieveAccountRequest : " + authCertified.toJson() + "\n\n");   
         }  
     }
 

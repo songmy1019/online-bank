@@ -18,9 +18,12 @@ public class PolicyHandler{
     public void wheneverTransactionRequested_ShowHistory(@Payload TransactionRequested transactionRequested){
 
         if(!transactionRequested.validate()) return;
-        System.out.println("\n\n##### transactionRequested ShowHistory : " + transactionRequested.toJson() + "\n\n");
-
         HistoryShown historyShown = new HistoryShown();
+
+        System.out.println("\n\n\nBankAccountHistory.PolicyHandler.23\n##############################################");
+        System.out.println("ShowHistory");
+        System.out.println("##############################################\n\n\n");
+        System.out.println("\n\nBankAccountHistory.PolicyHandler.26\n##### transactionRequested ShowHistory : " + transactionRequested.toJson() + "\n\n");
 
         historyShown.setListHistory(historyRepository.findByAccountNo(transactionRequested.getAccountNo()));
         historyShown.publish();
@@ -29,7 +32,11 @@ public class PolicyHandler{
     public void wheneverAccountRequestCompleted_AddHistory(@Payload AccountRequestCompleted accountRequestCompleted){
 
         if(!accountRequestCompleted.validate()) return;
-        System.out.println("\n\n##### listener AddHistory : " + accountRequestCompleted.toJson() + "\n\n");
+
+        System.out.println("\n\n\nBankAccountHistory.PolicyHandler.36\n##############################################");
+        System.out.println("AddHistory");
+        System.out.println("##############################################\n\n\n");
+        System.out.println("\n\nBankAccount.PolicyHandler.39\n##### listener AddHistory : " + accountRequestCompleted.toJson() + "\n\n");
 
         if( "01".equals( accountRequestCompleted.getRequestId() ) ||  // Deposit
             "02".equals( accountRequestCompleted.getRequestId() ) ){  // Withdraw

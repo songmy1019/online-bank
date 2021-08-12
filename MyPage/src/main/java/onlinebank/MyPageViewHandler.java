@@ -21,7 +21,10 @@ public class MyPageViewHandler {
     public void whenAccountRequestCompleted_then_UPDATE(@Payload AccountRequestCompleted accountRequestCompleted) {
         try {
             if (!accountRequestCompleted.validate()) return;
-            System.out.println("\n\n##### listener accountRequestCompleted : " + accountRequestCompleted.toJson() + "\n\n");   
+            System.out.println("\n\n\nMyPage.MyPageViewHandler.24\n##############################################");
+            System.out.println("UPDATE when accountRequestCompleted");
+            System.out.println("##############################################\n\n\n");
+            System.out.println("\n\nMyPage.MyPageViewHandler.27\n##### listener accountRequestCompleted : " + accountRequestCompleted.toJson() + "\n\n");   
 
             MyPage myPage = myPageRepository.findByAccountNo( accountRequestCompleted.getAccountNo() );
             if( myPage == null ) myPage = new MyPage();            
@@ -44,10 +47,13 @@ public class MyPageViewHandler {
     public void whenAccountRequestCancelled_then_UPDATE(@Payload AccountRequestCancelled accountRequestCancelled) {
         try {
             if (!accountRequestCancelled.validate()) return;
-            System.out.println("\n\n##### listener accountRequestCancelled : " + accountRequestCancelled.toJson() + "\n\n");   
-
+            System.out.println("\n\n\nMyPage.MyPageViewHandler.50\n##############################################");
+            System.out.println("UPDATE when accountRequestCompleted");
+            System.out.println("##############################################\n\n\n");
+            System.out.println("\n\nMyPage.MyPageViewHandler.53\n##### listener accountRequestCancelled : " + accountRequestCancelled.toJson() + "\n\n");   
+                        
             // 요청 취소의 경우 계좌가 존재하는 경우에만 상태변경
-            MyPage myPage = myPageRepository.findByAccountNo( accountRequestCompleted.getAccountNo() );
+            MyPage myPage = myPageRepository.findByAccountNo( accountRequestCancelled.getAccountNo() );
             if( myPage != null ){  
                 myPage = new MyPage();
                 myPage.setAccountNo( accountRequestCancelled.getAccountNo() );
