@@ -71,3 +71,6 @@ spring:
     command:
       default:
         execution.isolation.thread.timeoutInMilliseconds: 610
+        circuitBreaker:
+          requestVolumeThreshold: 20  
+          errorThresholdPercentage: 50 
