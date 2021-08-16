@@ -43,7 +43,7 @@ public class Auth {
         System.out.println("###############################################\n");
 
 		try {
-			Thread.currentThread().sleep((long) (610 + Math.random() * 220));
+			Thread.currentThread().sleep((long) (800 + Math.random() * 220));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
