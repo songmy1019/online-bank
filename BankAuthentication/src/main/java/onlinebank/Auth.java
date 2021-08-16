@@ -59,7 +59,7 @@ public class Auth {
             });
 
             try {
-                Thread.currentThread().sleep((long) (400 + Math.random() * 220));
+                Thread.currentThread().sleep((long) (550 + Math.random() * 220));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
