@@ -42,12 +42,6 @@ public class Auth {
         System.out.println("requestName : " + getRequestName()) ;
         System.out.println("###############################################\n");
 
-		try {
-			Thread.currentThread().sleep((long) (800 + Math.random() * 220));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
         if( authResult == false ){
             AuthCancelled authCancelled = new AuthCancelled();
             BeanUtils.copyProperties(this, authCancelled);
@@ -63,16 +57,13 @@ public class Auth {
                     authCertified.publish();
                 }
             });
-
-			/*
-            try {
-                Thread.currentThread().sleep((long) (550 + Math.random() * 220));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-			*/
-
         }
+
+		try {
+			Thread.currentThread().sleep((long) (400 + Math.random() * 220));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
 
     
