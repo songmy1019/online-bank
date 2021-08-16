@@ -47,24 +47,24 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: BankRequest
-          uri: http://BankRequest:8080
+        - id: request
+          uri: http://request:8080
           predicates:
             - Path=/requests/** 
-        - id: BankAuthentication
-          uri: http://BankAuthentication:8080
+        - id: auth
+          uri: http://auth:8080
           predicates:
             - Path=/auths/** 
-        - id: BankAccount
-          uri: http://BankAccount:8080
+        - id: account
+          uri: http://account:8080
           predicates:
             - Path=/accounts/** 
-        - id: BankAccountHistory
-          uri: http://BankAccountHistory:8080
+        - id: history
+          uri: http://history:8080
           predicates:
             - Path=/histories/** 
-        - id: MyPage
-          uri: http://MyPage:8080
+        - id: mypage
+          uri: http://mypages:8080
           predicates:
             - Path=/mypages/** 
       globalcors:
