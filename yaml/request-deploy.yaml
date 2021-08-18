@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: request
+  #navespace: mybank
+  labels:
+    app: request
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: request
+  template:
+    metadata:
+      labels:
+        app: request
+    spec:
+      containers:
+        - name: request
+          image: 274697432830.dkr.ecr.ap-northeast-2.amazonaws.com/request
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 200m
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: request
+  #navespace: mybank
+  labels:
