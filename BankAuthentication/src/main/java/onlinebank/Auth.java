@@ -59,11 +59,11 @@ public class Auth {
             });
         }
 
-		try {
-			Thread.currentThread().sleep((long) (420 + Math.random() * 200));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		//try {
+		//	Thread.currentThread().sleep((long) (420 + Math.random() * 200));
+		//} catch (InterruptedException e) {
+		//	e.printStackTrace();
+		//}
     }
 
     
