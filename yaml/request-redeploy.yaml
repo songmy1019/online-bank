@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: request
-          image: 274697432830.dkr.ecr.ap-northeast-2.amazonaws.com/request
+          image: 879772956301.dkr.ecr.ap-northeast-2.amazonaws.com/request
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
