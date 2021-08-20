@@ -50,7 +50,7 @@
 
 ![image](https://user-images.githubusercontent.com/27180840/130164068-a85c1014-a762-4d2d-b017-30c10cd4335f.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130164085-2015200a-8da9-4e24-b50b-4e53d6fd13d5.png)
+![image](https://user-images.githubusercontent.com/27180840/130178299-14fd56d2-ae8b-47be-b328-740637772e23.png)
 
 ![image](https://user-images.githubusercontent.com/27180840/130168216-30c448ef-61f0-4159-a2a7-472fcf8a7a58.png)
 
@@ -61,10 +61,7 @@
 3. 잔액 조회, 거래내역 조회 서비스는 24시간 이용이 가능하다 (Async 호출-event-driven)
 4. 입/출금, 계좌 개설/폐쇄 서비스가 과중되면 잠시 후에 하도록 유도한다. (Circuit breaker, fallback)
 5. 고객이 최종 거래 내역, 계좌 상태를 계속 확인 가능해야 한다 (CQRS)
-
-![image](https://user-images.githubusercontent.com/27180840/130164120-0979d453-7ad5-4239-b9bc-8ec997572edf.png)
-
-
+![image](https://user-images.githubusercontent.com/27180840/130178255-bb142282-4eb6-4487-b6b0-ffab6e990f28.png)
 
 
 ## 구현
