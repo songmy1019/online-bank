@@ -14,6 +14,7 @@
 6. 고객이 계좌를 폐쇄한다.
 7. 고객이 개인정보 인증 대상 업무를 선택한 경우 개인정보 인증을 한다.
    - 개인정보 인증 대상 : 입금, 출금, 계좌 개설/폐쇄 
+*******
 
 ### 비기능적 요구 사항
 1. 트랜잭션 
@@ -26,7 +27,9 @@
 
 3. 성능
    - 고객이 최종 거래 내역, 계좌 상태를 계속 확인 가능해야 한다 (CQRS)
-![image](https://user-images.githubusercontent.com/87048759/130161454-c297b090-f46f-493e-9759-5b66cb8e5675.png)
+*******
+
+## 분석/설계
 
 
 http://www.msaez.io/#/courses/assessment/running@cloud-final-aws-1-5
