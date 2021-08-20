@@ -30,33 +30,35 @@
 *****
 
 ## 분석/설계
+![image](https://user-images.githubusercontent.com/27180840/130163209-8c3d6c43-6bd1-44c8-aef7-3cf6d2cfa832.png)
 
-![image](https://user-images.githubusercontent.com/87048583/130161691-197d27f6-5390-4887-b611-e814ce908b87.png)
+![image](https://user-images.githubusercontent.com/27180840/130163166-d6f39ea8-dc75-4764-be19-3c537b6a9df9.png)
 
-![image](https://user-images.githubusercontent.com/87048583/130161607-f048b240-e560-4fca-8532-4506cf6b7b08.png)
+![image](https://user-images.githubusercontent.com/27180840/130163779-d249160e-aee1-4cad-8a2b-4c6365d54eba.png)
 
-![image](https://user-images.githubusercontent.com/87048583/130161623-d328d03b-8f7c-403b-b7d0-110dfbbc0194.png)
+![image](https://user-images.githubusercontent.com/27180840/130163801-55cb9ee1-0c9b-45e6-a721-60da2a2bdc2a.png)
 
-![image](https://user-images.githubusercontent.com/87048583/130161719-9a3299fe-03d1-4313-ba76-07454a72bc00.png)
+![image](https://user-images.githubusercontent.com/27180840/130163815-2ec94016-126e-4ea9-a2ce-c6054385336a.png)
 
-![image](https://user-images.githubusercontent.com/87048583/130161750-aa757eb3-e2f3-4066-bb49-4954e9b82fe2.png)
+![image](https://user-images.githubusercontent.com/27180840/130163823-a8f74f4a-2f5f-416d-a3a4-7c9afee15f44.png)
 
-![image](https://user-images.githubusercontent.com/87048583/130161777-6d135776-5da4-4dd6-afb4-51290c0afba9.png)
+![image](https://user-images.githubusercontent.com/27180840/130163838-eac8aefb-9cd7-46c0-b2d1-761a32d3282f.png)
 
-![image](https://user-images.githubusercontent.com/87048583/130161792-115ba02c-45aa-4cfa-94b6-ba649f7892cb.png)
+![image](https://user-images.githubusercontent.com/27180840/130163853-f93b938f-9251-4632-b4e6-5a242ee8c28e.png)
 
-![image](https://user-images.githubusercontent.com/87048583/130161833-9d1c1127-9646-4625-95c8-ac62945a922e.png)
+![image](https://user-images.githubusercontent.com/27180840/130164013-25e67228-ab6e-4a3e-97ad-26301a3e088d.png)
 
-## 이벤트스토밍 – 컨텍스트 매핑
-![image](https://user-images.githubusercontent.com/87048583/130162311-f6922d5c-40a8-4f69-b3d2-71976aef0fd6.png)
+![image](https://user-images.githubusercontent.com/27180840/130164024-cf068293-6f9e-4205-83ed-ff0271d39a25.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130162123-7ae98a3b-b92a-4a52-9fb2-07530bdf212e.png)
+![image](https://user-images.githubusercontent.com/27180840/130164068-a85c1014-a762-4d2d-b017-30c10cd4335f.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130162090-9613cb44-7da7-4c2e-8ed1-439014ddeaf5.png)
+![image](https://user-images.githubusercontent.com/27180840/130164085-2015200a-8da9-4e24-b50b-4e53d6fd13d5.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130162063-4e2205c1-60b4-4d4d-aa11-4fef32f5b7a6.png)
+![image](https://user-images.githubusercontent.com/27180840/130164096-53c0a44f-cef9-48a2-8ddc-256e66396a0e.png)
 
-![image](https://user-images.githubusercontent.com/87048583/130162657-413160b7-f647-4e4f-9d16-a8371bf1d778.png)
+![image](https://user-images.githubusercontent.com/27180840/130164120-0979d453-7ad5-4239-b9bc-8ec997572edf.png)
+
+
 
 
 ## 구현
