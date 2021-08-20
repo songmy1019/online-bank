@@ -47,7 +47,8 @@
 
 ![image](https://user-images.githubusercontent.com/87048583/130161833-9d1c1127-9646-4625-95c8-ac62945a922e.png)
 
-![image](https://user-images.githubusercontent.com/87048583/130161870-684c52d4-10a7-4b18-82d1-b7241366388e.png)
+이벤트스토밍 – 컨텍스트 매핑
+![image](https://user-images.githubusercontent.com/87048583/130162311-f6922d5c-40a8-4f69-b3d2-71976aef0fd6.png)
 
 ![image](https://user-images.githubusercontent.com/27180840/130162123-7ae98a3b-b92a-4a52-9fb2-07530bdf212e.png)
 
@@ -55,8 +56,7 @@
 
 ![image](https://user-images.githubusercontent.com/27180840/130162063-4e2205c1-60b4-4d4d-aa11-4fef32f5b7a6.png)
 
-이벤트스토밍 – 컨텍스트 매핑
-![image](https://user-images.githubusercontent.com/87048583/130162311-f6922d5c-40a8-4f69-b3d2-71976aef0fd6.png)
+
 
 ## 구현
 
