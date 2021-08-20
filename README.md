@@ -182,12 +182,12 @@ http http://request:8080/requests/1
 
 ```
 pom.xml
-sqlite 사용을 위해 sqlite용 jdbc 추가
+sqlite 사용을 위해 sqlite용 jdbc dependency 추가
 	<dependency>
       		<groupId>org.xerial</groupId>
       		<artifactId>sqlite-jdbc</artifactId>
 	</dependency>
-쿼리를 이용하기 위해 mybatis 사용 하기 위해 dependency 추가
+쿼리로 작업하기 위해 mybatis dependency 추가
 	<dependency>
     		<groupId>org.hibernate</groupId>
 		<artifactId>hibernate-core</artifactId>
