@@ -55,7 +55,8 @@
 
 ![image](https://user-images.githubusercontent.com/27180840/130162063-4e2205c1-60b4-4d4d-aa11-4fef32f5b7a6.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130162022-c178393b-d0cc-4585-acd7-8beef55de095.png)
+이벤트스토밍 – 컨텍스트 매핑
+![image](https://user-images.githubusercontent.com/87048583/130162311-f6922d5c-40a8-4f69-b3d2-71976aef0fd6.png)
 
 
 ## 구현
