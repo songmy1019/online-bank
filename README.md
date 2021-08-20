@@ -58,7 +58,6 @@
 이벤트스토밍 – 컨텍스트 매핑
 ![image](https://user-images.githubusercontent.com/87048583/130162311-f6922d5c-40a8-4f69-b3d2-71976aef0fd6.png)
 
-
 ## 구현
 
 http://www.msaez.io/#/courses/assessment/running@cloud-final-aws-1-5
