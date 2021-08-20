@@ -181,16 +181,35 @@ http http://request:8080/requests/1
 고객에게 메세지 전송은 전통적인 RDB로 개발 하기로 하고 구현이 간단한 sqlite로 구현함.
 
 ```
-application.yml
+pom.xml
+sqlite 사용을 위해 sqlite용 jdbc 추가
+	<dependency>
+      		<groupId>org.xerial</groupId>
+      		<artifactId>sqlite-jdbc</artifactId>
+	</dependency>
+쿼리를 이용하기 위해 mybatis 사용 하기 위해 dependency 추가
+	<dependency>
+    		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-core</artifactId>
+	</dependency>
+    	<dependency>
+        	<groupId>org.mybatis.spring.boot</groupId>
+        	<artifactId>mybatis-spring-boot-starter</artifactId>
+        	<version>1.3.2</version>
+    	</dependency>
 
+
+application.yml
+was 기동시 자동으로 sqlite 연결 설정 프로젝트 폴드에 자동으로 sqlitesample.db 생성됨
   datasource:
     url: jdbc:sqlite:sqlitesample.db 
     driver-class-name: org.sqlite.JDBC
     username: admin 
     password: admin
 
-SendMsgVO.java
 
+SendMsgVO.java
+mybatis 조회 결과를 VO 형태로 받기 위한 VO 설정
 @Data
 public class SendMsgVO {
 	private Long id; 
@@ -207,6 +226,7 @@ public class SendMsgVO {
 }
 
 KakaoDAO.java
+Mapper.xml 파일과 연결하기 위한 용도로 함수 생성
 @Mapper
 public interface  KakaoDAO {
 	void insertmsg(SendMsgVO vo) throws Exception;;
@@ -220,6 +240,8 @@ public interface  KakaoDAO {
 
 ```
 KakaoTakMapper.xml
+KakaoDAO.java 생성된 함수와 동일한 package 경로와 함수명으로 select, insert 함수 생성
+
 <mapper namespace="com.example.demo.table.KakaoDAO">
     <select id="selectmsg"  resultType="com.example.demo.table.SendMsgVO">
     <![CDATA[
@@ -237,13 +259,17 @@ KakaoTakMapper.xml
 </mapper>
 
 KafkaService.java
+카프카에서 수신 받은 메세지를 sqlite에 저장
+
 @Service
 @Transactional
 public class KafkaService {
 	
-    @Autowired
-    KakaoDAO kakaoDAO;
+	//저장을 위해 위에서 만든 DAO 파일 선언
+	@Autowired
+	KakaoDAO kakaoDAO;
 	
+        //수신 받을 topic 선언
 	@KafkaListener(topics = "realestate", groupId="kakaotalk")
 	public void getKafka(String message) {
 		
@@ -254,6 +280,7 @@ public class KafkaService {
 			Map<String, String> map = (Map<String, String>)objectMapper.readValue( message, Map.class);
 			System.out.println( "kafka recerve data : " + map);
 			
+			//수신 받은 메세지에서 job 에 kakaotalk 이라는 글자가 존재 하면 sqlite 저장
 			if ( map.get("job")!= null && map.get("job").indexOf("kakaotalk") >=0 ) {
 				
 				SendMsgVO vo = new SendMsgVO(); 
