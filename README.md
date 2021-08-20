@@ -38,6 +38,19 @@ http://www.msaez.io/#/courses/assessment/running@cloud-final-aws-1-5
 
 ![image](https://user-images.githubusercontent.com/87048583/130161623-d328d03b-8f7c-403b-b7d0-110dfbbc0194.png)
 
+![image](https://user-images.githubusercontent.com/87048583/130161719-9a3299fe-03d1-4313-ba76-07454a72bc00.png)
+
+![image](https://user-images.githubusercontent.com/87048583/130161750-aa757eb3-e2f3-4066-bb49-4954e9b82fe2.png)
+
+![image](https://user-images.githubusercontent.com/87048583/130161777-6d135776-5da4-4dd6-afb4-51290c0afba9.png)
+
+![image](https://user-images.githubusercontent.com/87048583/130161792-115ba02c-45aa-4cfa-94b6-ba649f7892cb.png)
+
+![image](https://user-images.githubusercontent.com/87048583/130161833-9d1c1127-9646-4625-95c8-ac62945a922e.png)
+
+![image](https://user-images.githubusercontent.com/87048583/130161870-684c52d4-10a7-4b18-82d1-b7241366388e.png)
+
+
 # correlation - 삭제 / 요청 데이터는 요청 실패시 삭제한다.
 
 # 평가항목 
