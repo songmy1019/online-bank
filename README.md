@@ -31,7 +31,8 @@
 
 http://www.msaez.io/#/courses/assessment/running@cloud-final-aws-1-5
 
-
+As-Is 조직구조 – Horizontal
+![image](https://user-images.githubusercontent.com/87048583/130161558-820cc203-2f17-4b0d-b46d-fa44d8e44b14.png)
 
 # correlation - 삭제 / 요청 데이터는 요청 실패시 삭제한다.
 
