@@ -1,35 +1,23 @@
 http://www.msaez.io/#/courses/assessment/running@cloud-final-aws-1-5
 
-https://github.com/msa-ez/example-food-delivery
+
 
 # correlation - 삭제 / 요청 데이터는 요청 실패시 삭제한다.
 
 # 평가항목 
 
-  Saga
-  
-  CQRS
-  
-  Correlation
-  
-  Req/Resp
-  
-  Gateway
-  
-  Deploy / Pipeline 
-  
-  Circuit Breaker
-  
-  Autoscale (HPA)
-  
-  Zero-downtime deploy (Readiness Probe) 
-  
-  Config Map / Persistence Volume 
-  
-  Polyglot
-  
+  Saga  
+  CQRS  
+  Correlation  
+  Req/Resp  
+  Gateway  
+  Deploy / Pipeline   
+  Circuit Breaker  
+  Autoscale (HPA)  
+  Zero-downtime deploy (Readiness Probe)   
+  Config Map / Persistence Volume   
+  Polyglot  
   Self-healing (Liveness Probe)
-
 =================================================================================
 # 배포 시나리오
 =================================================================================
