@@ -84,6 +84,7 @@ cd gateway
 mvn spring-boot:run
 
 ```
+*****
 
 ### DDD의 적용
 
@@ -167,15 +168,17 @@ http request:8080/requests accountNo="1111" requestId="01" requestName="Deposit"
 ```
 http http://request:8080/requests/1
 ```
+*****
 
 ### 폴리글랏 퍼시스턴스(진행중)
 
-
+*****
 
 ### 폴리글랏 프로그래밍(진행중)
 
-### 동기식 호출 (구현)
+*****
 
+### 동기식 호출 (구현)
 
 분석단계에서의 조건 중 하나로 요청(request)->인증(auth) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 
 
@@ -237,6 +240,7 @@ public interface AuthService {
         }
     }
 ```
+*****
 
 ### 비동기식 호출 
 
@@ -341,8 +345,10 @@ public class PolicyHandler{
     }
 }
 ```
+*****
 
 ## 운영
+*****
 
 ### 서킷 브레이킹
 
@@ -733,6 +739,7 @@ Transfer-Encoding: chunked
 }
 ```
 #### request 데이터가 정상적으로 삭제되었음을 확인할 수 있다. 
+*****
 
 ### 동기식 호출 (운영)
 
@@ -907,6 +914,7 @@ tmpfs           1.9G     0  1.9G   0% /sys/firmware
 ```
 
 #### 생성된 Persistence Volume 이 pod 내 정상 mount 되었음을 확인할 수 있다. 
+*****
 
 ### Liveness Prove
 
