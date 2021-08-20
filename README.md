@@ -47,7 +47,7 @@
 
 ![image](https://user-images.githubusercontent.com/87048583/130161833-9d1c1127-9646-4625-95c8-ac62945a922e.png)
 
-이벤트스토밍 – 컨텍스트 매핑
+## 이벤트스토밍 – 컨텍스트 매핑
 ![image](https://user-images.githubusercontent.com/87048583/130162311-f6922d5c-40a8-4f69-b3d2-71976aef0fd6.png)
 
 ![image](https://user-images.githubusercontent.com/27180840/130162123-7ae98a3b-b92a-4a52-9fb2-07530bdf212e.png)
