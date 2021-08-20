@@ -52,8 +52,6 @@
 
 ![image](https://user-images.githubusercontent.com/27180840/130178299-14fd56d2-ae8b-47be-b328-740637772e23.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130168216-30c448ef-61f0-4159-a2a7-472fcf8a7a58.png)
-
 ![image](https://user-images.githubusercontent.com/27180840/130164096-53c0a44f-cef9-48a2-8ddc-256e66396a0e.png)
 비기능적 요구사항 coverage 체크
 1. 업무 요청이 실패한 경우 요청 내역을 삭제한다 (Correlation)
