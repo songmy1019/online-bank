@@ -272,7 +272,7 @@ public class KafkaService {
 	KakaoDAO kakaoDAO;
 	
         //수신 받을 topic 선언
-	@KafkaListener(topics = "realestate", groupId="kakaotalk")
+	@KafkaListener(topics = "onlinebank", groupId="kakaotalk")
 	public void getKafka(String message) {
 		
 		System.out.println( "kakaotalk getKafka START " );
