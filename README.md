@@ -44,8 +44,6 @@
 
 ![image](https://user-images.githubusercontent.com/27180840/130163838-eac8aefb-9cd7-46c0-b2d1-761a32d3282f.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130163853-f93b938f-9251-4632-b4e6-5a242ee8c28e.png)
-
 ![image](https://user-images.githubusercontent.com/27180840/130164013-25e67228-ab6e-4a3e-97ad-26301a3e088d.png)
 
 ![image](https://user-images.githubusercontent.com/27180840/130164024-cf068293-6f9e-4205-83ed-ff0271d39a25.png)
@@ -55,6 +53,13 @@
 ![image](https://user-images.githubusercontent.com/27180840/130164085-2015200a-8da9-4e24-b50b-4e53d6fd13d5.png)
 
 ![image](https://user-images.githubusercontent.com/27180840/130164096-53c0a44f-cef9-48a2-8ddc-256e66396a0e.png)
+① 업무 요청이 실패한 경우 요청 내역을 삭제한다 (Correlation)
+② 개인정보 인증 대상 업무를 선택한 경우 인증 실패 시 서비스 이용이 불가하다 (Sync)
+③ 잔액 조회, 거래내역 조회 서비스는 24시간 이용이 가능하다 (Async 호출-event-driven)
+④ 입/출금, 계좌 개설/폐쇄 서비스가 과중되면 잠시 후에 하도록 유도한다. (Circuit breaker, fallback)
+⑤ 고객이 최종 거래 내역, 계좌 상태를 계속 확인 가능해야 한다 (CQRS)
+
+![image](https://user-images.githubusercontent.com/27180840/130164526-29db22a8-fef7-492d-b2dd-d7ea3efb90fb.png)
 
 ![image](https://user-images.githubusercontent.com/27180840/130164120-0979d453-7ad5-4239-b9bc-8ec997572edf.png)
 
