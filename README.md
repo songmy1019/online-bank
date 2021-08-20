@@ -460,6 +460,7 @@ Shortest transaction:           0.01
 ```
 운영시스템은 죽지 않고 지속적으로 CB 에 의하여 적절히 회로가 열림과 닫힘이 벌어지면서 자원을 보호하고 있음을 보여줌. 
 동적 Scale out (replica의 자동적 추가,HPA) 을 통하여 시스템을 확장 해주는 후속처리가 필요.
+*****
 
 ### 오토스케일 아웃
 
@@ -551,7 +552,7 @@ siege                             1/1     Running   0          3h19m
 #### 부하테스트 결과 Availability 는 100% 를 보이며 성공하였고, 늘어난 pod 개수를 통하여
 
 오토 스케일링이 정상적으로 수행되었음을 확인할 수 있다. 
-
+*****
 
 ### 무정지 재배포
 
@@ -665,6 +666,7 @@ Shortest transaction:           0.00
 ```
 
 #### 배포중 Availability 100%를 보이며 무정지 재배포가 정상적으로 성공하였다.
+*****
 
 ### Gateway / Corelation
 
@@ -810,6 +812,7 @@ Transfer-Encoding: chunked
 ```
 
 #### 테스트를 통하여 인증 서비스가 기동되지 않은 상태에서는 업무 요청이 실패함을 확인 할 수 있음.
+*****
 
 ### Persistence Volume
 
