@@ -178,11 +178,107 @@ http http://request:8080/requests/1
 
 ### 폴리글랏 퍼시스턴스(진행중)
 
-*****
+고객에게 메세지 전송은 전통적인 RDB로 개발 하기로 하고 구현이 간단한 sqlite로 구현함.
+
+```
+application.yml
+
+  datasource:
+    url: jdbc:sqlite:sqlitesample.db 
+    driver-class-name: org.sqlite.JDBC
+    username: admin 
+    password: admin
+
+SendMsgVO.java
+
+@Data
+public class SendMsgVO {
+	private Long id; 
+	private String phone; 
+	private String message; 
+	
+	public SendMsgVO() {
+	}
+	
+	public SendMsgVO(String pphone, String pmessage) {
+		this.phone = pphone;
+		this.message = pmessage;
+	}
+}
+
+KakaoDAO.java
+@Mapper
+public interface  KakaoDAO {
+	void insertmsg(SendMsgVO vo) throws Exception;;
+	List<SendMsgVO> selectmsg() throws Exception;;
+}
+
+```
 
 ### 폴리글랏 프로그래밍(진행중)
+구현의 편의를 위해 Java 버전도 16 을 사용.
 
-*****
+```
+KakaoTakMapper.xml
+<mapper namespace="com.example.demo.table.KakaoDAO">
+    <select id="selectmsg"  resultType="com.example.demo.table.SendMsgVO">
+    <![CDATA[
+        select id, phone, message from send_msg order by 1 desc LIMIT 5
+    ]]>
+    </select>
+    
+    <insert id="insertmsg" parameterType="com.example.demo.table.SendMsgVO" >
+    <![CDATA[
+    	INSERT INTO send_msg VALUES 
+		( (select max(id)+1 from send_msg) , 
+		#{phone} , #{message}  )
+	]]>
+	</insert>
+</mapper>
+
+KafkaService.java
+@Service
+@Transactional
+public class KafkaService {
+	
+    @Autowired
+    KakaoDAO kakaoDAO;
+	
+	@KafkaListener(topics = "realestate", groupId="kakaotalk")
+	public void getKafka(String message) {
+		
+		System.out.println( "kakaotalk getKafka START " );
+		
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			Map<String, String> map = (Map<String, String>)objectMapper.readValue( message, Map.class);
+			System.out.println( "kafka recerve data : " + map);
+			
+			if ( map.get("job")!= null && map.get("job").indexOf("kakaotalk") >=0 ) {
+				
+				SendMsgVO vo = new SendMsgVO(); 
+				vo.setPhone(  map.get( "phone").toString() );
+	    		vo.setMessage( map.get( "message").toString() );
+	    		kakaoDAO.insertmsg(vo);
+			} else {
+				System.out.println( "kafka Skip ");
+			}
+			
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+	}
+}
+
+Dockerfile 
+Java 16 버전 사용을 위해 image도 openjdk16 을 사용함.
+
+FROM khipu/openjdk16-alpine
+COPY target/*SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-Xmx400M","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--spring.profiles.active=docker"]
+
+```
 
 ### 동기식 호출 (구현)
 
