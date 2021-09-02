@@ -22,7 +22,7 @@
 
 3. 성능
    - 고객이 주문한 내역의 진행현황을 확인할 수 있다. (CQRS)
-   - 주문/배송상태가 바뀔 때 마다 MyPage에서 상태를 확인할 수 있다.(Event Driven)
+   - 주문/걸제상태가 바뀔 때 마다 MyPage에서 상태를 확인할 수 있다.(Event Driven)
    
 *****
 
@@ -51,25 +51,41 @@ http://www.msaez.io/#/storming/3CCWjZexX3Y7Ypm85RPzPTQIPLg1/8cf40a06f13d8f600029
 
 ### 이벤트스토밍 - Actor, Command
 
+![image](https://user-images.githubusercontent.com/27180840/131900057-fefc78ac-f83f-4e62-82e1-d4896fee3144.png)
+
 ### 이벤트스토밍 - Aggregate
+
+![image](https://user-images.githubusercontent.com/27180840/131900208-d83160fc-ee80-4569-b9a9-1b678f703355.png)
 
 ### 이벤트스토밍 - Bounded Context
 
+![image](https://user-images.githubusercontent.com/27180840/131900317-867fcd9c-3414-418a-9454-dcc0c94a7361.png)
+
 ### 이벤트스토밍 - Policy
+
+![image](https://user-images.githubusercontent.com/27180840/131900425-1479b2d8-d306-4eb2-adf9-4b550b4c33aa.png)
 
 ### 이벤트스토밍 - Context Mapping
 
+![image](https://user-images.githubusercontent.com/27180840/131900493-94ca6dc6-f5eb-48fa-8e06-ca8752e00c20.png)
+
 ### 이벤트스토밍 - 완성된 모형
+
+![image](https://user-images.githubusercontent.com/27180840/131900964-1a339a63-0b18-426b-81cd-cbefaca5fa35.png)
 
 ### 이벤트스토밍 - 기능 요구사항 Coverage Check
 
+![image](https://user-images.githubusercontent.com/27180840/131900771-d970985c-dbec-484f-b9a5-f3880fa5570a.png)
+
 ### 이벤트스토밍 - 비기능 요구사항 Coverage Check
+
+![image](https://user-images.githubusercontent.com/27180840/131901431-b7a38c42-6ad9-471a-818f-937e7f3ab372.png)
 
    1. 고객은 결제가 완료되어야 배송 서비스 이용이 가능하다. (Sync)
    2. 과일 주문 서비스는 24시간 이용이 가능하다 (Async 호출-event-driven)
    3. 결제 서비스가 과중되면 잠시 후에 하도록 유도한다. (Circuit breaker, fallback)
    4. 고객이 주문한 내역의 진행현황을 확인할 수 있다. (CQRS)
-   5. 주문/배송상태가 바뀔 때 마다 MyPage에서 상태를 확인할 수 있다.(Event Driven)
+   5. 주문/결제상태가 바뀔 때 마다 MyPage에서 상태를 확인할 수 있다.(Event Driven)
 
 ### 헥사고날 아키텍처
 
