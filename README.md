@@ -13,7 +13,6 @@
 
 ### 비기능적 요구 사항
 1. 트랜잭션 
-   - 고객이 요청한 업무 처리가 실패한 경우 요청 내역을 삭제한다 (Correlation)
    - 고객은 결제가 완료되어야 배송 서비스 이용이 가능하다. (Sync)
 
 2. 장애격리 
@@ -22,7 +21,8 @@
 
 3. 성능
    - 고객이 주문한 내역의 진행현황을 확인할 수 있다. (CQRS)
-   - 진행상태가 변경되면 고객에게 알림 메시지를 전송한다. (Event Driven)
+   - 주문/배송상태가 바뀔 때 마다 MyPage에서 상태를 확인할 수 있다.(Event Driven)
+   
 *****
 
 ## 분석/설계
@@ -42,36 +42,54 @@ http://www.msaez.io/#/storming/3CCWjZexX3Y7Ypm85RPzPTQIPLg1/8cf40a06f13d8f600029
 
 ### 이벤트스토밍 - Event
 
+![image](https://user-images.githubusercontent.com/27180840/131846689-ad71f683-d921-42e5-9e38-67f7e15f09df.png)
 
-## 분석/설계
+### 이벤트스토밍 – 비적격 이벤트 제거
 
-비기능적 요구사항 coverage 체크
-1. 업무 요청이 실패한 경우 요청 내역을 삭제한다 (Correlation)
-2. 개인정보 인증 대상 업무를 선택한 경우 인증 실패 시 서비스 이용이 불가하다 (Sync)
-3. 잔액 조회, 거래내역 조회 서비스는 24시간 이용이 가능하다 (Async 호출-event-driven)
-4. 입/출금, 계좌 개설/폐쇄 서비스가 과중되면 잠시 후에 하도록 유도한다. (Circuit breaker, fallback)
-5. 고객이 최종 거래 내역, 계좌 상태를 계속 확인 가능해야 한다 (CQRS)
+![image](https://user-images.githubusercontent.com/27180840/131846981-c706b08f-c2ac-4c3d-80ce-2180ccb60fbe.png)
+
+### 이벤트스토밍 - Actor, Command
+
+### 이벤트스토밍 - Aggregate
+
+### 이벤트스토밍 - Bounded Context
+
+### 이벤트스토밍 - Policy
+
+### 이벤트스토밍 - Context Mapping
+
+### 이벤트스토밍 - 완성된 모형
+
+### 이벤트스토밍 - 기능 요구사항 Coverage Check
+
+### 이벤트스토밍 - 비기능 요구사항 Coverage Check
+
+   1. 고객은 결제가 완료되어야 배송 서비스 이용이 가능하다. (Sync)
+   2. 과일 주문 서비스는 24시간 이용이 가능하다 (Async 호출-event-driven)
+   3. 결제 서비스가 과중되면 잠시 후에 하도록 유도한다. (Circuit breaker, fallback)
+   4. 고객이 주문한 내역의 진행현황을 확인할 수 있다. (CQRS)
+   5. 주문/배송상태가 바뀔 때 마다 MyPage에서 상태를 확인할 수 있다.(Event Driven)
+
+### 헥사고날 아키텍처
+
+
+
+
 
 
 ## 구현
 
 분석/설계 단계에서 도출된 헥사고날 아키텍처에 따라, 각 BC별로 대변되는 마이크로 서비스들을 스프링부트로 구현하였다. 
-구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (서비스 포트는 8081, 8082, 8083, 8084, 8084, 8088 이다)
+구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (서비스 포트는 8081, 8082, 8083, 8088 이다)
 
 ```
-cd BankRequest
+cd order
 mvn spring-boot:run
 
-cd BankAuthentication
+cd payment
 mvn spring-boot:run
 
-cd BankAccount
-mvn spring-boot:run
-
-cd BankHistory
-mvn spring-boot:run
-
-cd Mypage
+cd delivery
 mvn spring-boot:run
 
 cd gateway
@@ -83,7 +101,7 @@ mvn spring-boot:run
 ### DDD의 적용
 
 1. 각 서비스내에 도출된 핵심 Aggregate Root 객체를 Entity 로 선언하였다. 
-(예시는 request 마이크로 서비스 )
+(예시는 order 마이크로 서비스 )
 
 #### Request.java
 
