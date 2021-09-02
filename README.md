@@ -39,7 +39,7 @@
 
 ### Event Storming 결과
 MSAEz 로 모델링한 이벤트스토밍 결과:
-http://www.msaez.io/#/storming/3CCWjZexX3Y7Ypm85RPzPTQIPLg1/8cf40a06f13d8f600029032d3f313efb
+http://www.msaez.io/#/storming/3CCWjZexX3Y7Ypm85RPzPTQIPLg1/113c0155f10101dd4e75418ff9cf25fe
 
 ### 이벤트스토밍 - Event
 
@@ -197,18 +197,18 @@ public class Order {
 데이터소스 유형 (RDB or NoSQL) 에 대한 별도의 처리가 없도록 데이터 접근 어댑터를 
 자동 생성하기 위하여 Spring Data REST 의 RestRepository 를 적용하였다
 
-#### RequestRepository.java
+#### OrderRepository.java
 
 ```
-package onlinebank;
+package fruitsorenew;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@RepositoryRestResource(collectionResourceRel="requests", path="requests")
-public interface RequestRepository extends PagingAndSortingRepository<Request, Long>{
-
+@RepositoryRestResource(collectionResourceRel="orders", path="orders")
+public interface OrderRepository extends PagingAndSortingRepository<Order, Long>{
 }
+
 ```
 
 3. 적용 후 REST API 의 테스트
@@ -421,171 +421,7 @@ public class MyPageViewHandler {
 
 ```
 
-
-### 폴리글랏 퍼시스턴스
-
-고객에게 메세지 전송은 전통적인 RDB로 개발 하기로 하고 구현이 간단한 sqlite로 구현함.
-
-```
-pom.xml
-sqlite 사용을 위해 sqlite용 jdbc dependency 추가
-	<dependency>
-      		<groupId>org.xerial</groupId>
-      		<artifactId>sqlite-jdbc</artifactId>
-	</dependency>
-쿼리로 작업하기 위해 mybatis dependency 추가
-	<dependency>
-    		<groupId>org.hibernate</groupId>
-		<artifactId>hibernate-core</artifactId>
-	</dependency>
-    	<dependency>
-        	<groupId>org.mybatis.spring.boot</groupId>
-        	<artifactId>mybatis-spring-boot-starter</artifactId>
-        	<version>1.3.2</version>
-    	</dependency>
-
-
-application.yml
-was 기동시 자동으로 sqlite 연결 설정 프로젝트 폴드에 자동으로 sqlitesample.db 생성됨
-  datasource:
-    url: jdbc:sqlite:sqlitesample.db 
-    driver-class-name: org.sqlite.JDBC
-    username: admin 
-    password: admin
-
-
-SendMsgVO.java
-mybatis 조회 결과를 VO 형태로 받기 위한 VO 설정
-@Data
-public class SendMsgVO {
-	private Long id; 
-	private String phone; 
-	private String message; 
-	
-	public SendMsgVO() {
-	}
-	
-	public SendMsgVO(String pphone, String pmessage) {
-		this.phone = pphone;
-		this.message = pmessage;
-	}
-}
-
-KakaoDAO.java
-Mapper.xml 파일과 연결하기 위한 용도로 함수 생성
-@Mapper
-public interface  KakaoDAO {
-	void insertmsg(SendMsgVO vo) throws Exception;;
-	List<SendMsgVO> selectmsg() throws Exception;;
-}
-
-```
-
-### 폴리글랏 프로그래밍
-구현의 편의를 위해 Java 버전도 16 을 사용.
-
-```
-KakaoTakMapper.xml
-KakaoDAO.java 생성된 함수와 동일한 package 경로와 함수명으로 select, insert 함수 생성
-
-<mapper namespace="com.example.demo.table.KakaoDAO">
-    <select id="selectmsg"  resultType="com.example.demo.table.SendMsgVO">
-    <![CDATA[
-        select id, phone, message from send_msg order by 1 desc LIMIT 5
-    ]]>
-    </select>
-    
-    <insert id="insertmsg" parameterType="com.example.demo.table.SendMsgVO" >
-    <![CDATA[
-    	INSERT INTO send_msg VALUES 
-		( (select max(id)+1 from send_msg) , 
-		#{phone} , #{message}  )
-	]]>
-	</insert>
-</mapper>
-
-KafkaService.java
-카프카에서 수신 받은 메세지를 sqlite에 저장
-
-@Service
-@Transactional
-public class KafkaService {
-	
-	//저장을 위해 위에서 만든 DAO 파일 선언
-	@Autowired
-	KakaoDAO kakaoDAO;
-	
-        //수신 받을 topic 선언
-	@KafkaListener(topics = "onlinebank", groupId="kakaotalk")
-	public void getKafka(String message) {
-		
-		System.out.println( "kakaotalk getKafka START " );
-		
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			Map<String, String> map = (Map<String, String>)objectMapper.readValue( message, Map.class);
-			System.out.println( "kafka recerve data : " + map);
-			
-			//수신 받은 메세지에서 job 에 kakaotalk 이라는 글자가 존재 하면 sqlite 저장
-			if ( map.get("job")!= null && map.get("job").indexOf("kakaotalk") >=0 ) {
-				
-				SendMsgVO vo = new SendMsgVO(); 
-				vo.setPhone(  map.get( "phone").toString() );
-	    		vo.setMessage( map.get( "message").toString() );
-	    		kakaoDAO.insertmsg(vo);
-			} else {
-				System.out.println( "kafka Skip ");
-			}
-			
-		} catch ( Exception e ) {
-			e.printStackTrace();
-		}
-	}
-}
-
-Dockerfile 
-Java 16 버전 사용을 위해 image도 openjdk16 을 사용함.
-
-FROM khipu/openjdk16-alpine
-COPY target/*SNAPSHOT.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java","-Xmx400M","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--
-public class Auth {
-
-    @PrePersist
-    public void onPrePersist(){
-
-        String userId = "1@sk.com";
-        String userName = "sam";
-        String userPassword = "1234";
-        boolean authResult = false ;
-
-        if( userId.equals( getUserId() ) && userName.equals( getUserName() ) && userPassword.equals( getUserPassword() ) ){
-            authResult = true ;
-        }
-
-        if( authResult == false ){
-            AuthCancelled authCancelled = new AuthCancelled();
-            BeanUtils.copyProperties(this, authCancelled);
-	    // 실패 이벤트 카프카 송출
-            authCancelled.publish();
-
-        }else{
-            AuthCertified authCertified = new AuthCertified();
-            BeanUtils.copyProperties(this, authCertified);
-
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
-                @Override
-                public void beforeCommit(boolean readOnly) {
-		    // 성공 이벤트 카프카 송출
-                    authCertified.publish();
-                }
-            });
-        }
-    }
-```
-
-2. 계좌 서비스에서는 결제승인 이벤트에 대해서 이를 수신하여 자신의 정책을 처리하도록 PolicyHandler 를 구현한다
+계좌 서비스에서는 결제승인 이벤트에 대해서 이를 수신하여 자신의 정책을 처리하도록 PolicyHandler 를 구현한다
 
 #### PolicyHandler.java
 
@@ -925,6 +761,38 @@ Shortest transaction:           0.00
 
 #### Gateway 기능이 정상적으로 수행되는지 확인하기 위하여 Gateway를 통하여 요청서비스를 호출한다.  
 
+@application.yml 파일 (gateway 서비스)
+
+```
+   cloud:
+    gateway:
+      routes:
+        - id: order
+          #uri: http://localhost:8086
+          uri: http://localhost:8081
+          predicates:
+            - Path=/orders/** 
+        - id: mypage
+          uri: http://localhost:8082
+          predicates:
+            - Path= /myPages/**
+        - id: payment
+          #uri: http://localhost:8083
+          uri: http://localhost:8087
+          predicates:
+            - Path=/payments/** 
+        - id: delivery
+          uri: http://localhost:8084
+          predicates:
+            - Path=/deliveries/** 
+```	    
+
+게이트웨이 포트를 활용하여 각 서비스로 접근 가능한지 확인
+
+게이트웨이포트 8080 을 통해서 8081포트에 서비스하고 있는 주문(Order)서비스를 접근함
+
+??????? 이건 가능한지 나중에 확인해봐야함 로그 변경필요
+
 ```
 root@siege:/# http gateway:8080/requests accountNo="1111" requestId="01" requestName="Deposit" amountOfMoney=10000 userId="1@sk.com" userName="sam" userPassword="1234"
 
@@ -953,61 +821,24 @@ transfer-encoding: chunked
     "userPassword": "1234"
 }
 ```
-
 #### 요청 처리결과를 통하여 Gateway 기능이 정상적으로 수행되었음을 확인할 수 있다. 
 
-#### 요청이 정상적으로 처리되지 않는 경우( 예를 들어서 입금 요청을 했으나 계좌가 존재하지 않는 등 )
-
-요청시 파라미터로 전송된 id 값을 기준으로 기 저장된 요청 데이터를 삭제한다. 
-
-Gateway 테스트시 존재하지 않는 계좌에 입금을 시도하였으며 요청이 정상적으로 처리되지 못한 관계로
-
-기 저장된 데이터가 삭제 처리 된다. 
-
-```
-root@siege:/# http http://request:8080/requests
-
-HTTP/1.1 200 
-Content-Type: application/hal+json;charset=UTF-8
-Date: Thu, 19 Aug 2021 06:54:56 GMT
-Transfer-Encoding: chunked
-
-{
-    "_embedded": {
-        "requests": []
-    },
-    "_links": {
-        "profile": {
-            "href": "http://request:8080/profile/requests"
-        },
-        "self": {
-            "href": "http://request:8080/requests{?page,size,sort}",
-            "templated": true
-        }
-    },
-    "page": {
-        "number": 0,
-        "size": 20,
-        "totalElements": 0,
-        "totalPages": 0
-    }
-}
-```
-#### request 데이터가 정상적으로 삭제되었음을 확인할 수 있다. 
 *****
 
 ### 동기식 호출 (운영)
 
-#### 동기식 호출인 관계로 인증시스템 장애시 서비스를 처리할 수 없다. 
+#### 동기식 호출인 관계로 결제서비스 장애시 서비스를 처리할 수 없다. 
 
-1) 인증 서비스 임시로 삭제한다. 
+1) 결제 서비스 임시로 삭제한다. 
 
 ```
-root@labs-579721623:/home/project/online-bank/yaml# kubectl delete service auth
+@@@@@ 소스 수정로그 수정 필요 , 경로랑 잘 확인하기,, yaml은 왜? 
+root@labs-579721623:/home/project/fruitstore/yaml# kubectl delete service auth
 service "auth" deleted
 ```
 
 2) 요청 처리결과를 확인한다.
+********************오늘 데이터 입력 안된거,, 꼭 다시 해보기 
 
 ```
 root@siege:/# http request:8080/requests accountNo="1111" requestId="01" requestName="Deposit" amountOfMoney=10000 userId="1@sk.com" userName="sam" userPassword="1234"
@@ -1064,8 +895,9 @@ Transfer-Encoding: chunked
 }
 ```
 
-#### 테스트를 통하여 인증 서비스가 기동되지 않은 상태에서는 업무 요청이 실패함을 확인 할 수 있음.
+#### 테스트를 통하여 결제 서비스가 기동되지 않은 상태에서는 주문 요청이 실패함을 확인 할 수 있음.
 *****
+
 
 ### Persistence Volume
 
