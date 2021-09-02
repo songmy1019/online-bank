@@ -89,9 +89,7 @@ http://www.msaez.io/#/storming/3CCWjZexX3Y7Ypm85RPzPTQIPLg1/8cf40a06f13d8f600029
 
 ### 헥사고날 아키텍처
 
-
-
-
+![image](https://user-images.githubusercontent.com/27180840/131903383-a74d7f5d-58c9-4071-9a1b-5373c04a5094.png)
 
 
 ## 구현
