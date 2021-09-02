@@ -1,4 +1,5 @@
 # 과일 주문 서비스
+![image](https://user-images.githubusercontent.com/27180840/131888372-c52390ac-5f22-4da3-b8c6-44c80ddb16c7.png)
 
 ## 서비스 시나리오
 
@@ -82,6 +83,8 @@ http://www.msaez.io/#/storming/3CCWjZexX3Y7Ypm85RPzPTQIPLg1/8cf40a06f13d8f600029
 분석/설계 단계에서 도출된 헥사고날 아키텍처에 따라, 각 BC별로 대변되는 마이크로 서비스들을 스프링부트로 구현하였다. 
 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (서비스 포트는 8081, 8082, 8083, 8088 이다)
 
+@@@@@@@ 포트 확인 필요!!!! 
+
 ```
 cd order
 mvn spring-boot:run
@@ -95,6 +98,9 @@ mvn spring-boot:run
 cd gateway
 mvn spring-boot:run
 
+cd mypage
+mvn spring-boot:run
+
 ```
 *****
 
@@ -103,10 +109,10 @@ mvn spring-boot:run
 1. 각 서비스내에 도출된 핵심 Aggregate Root 객체를 Entity 로 선언하였다. 
 (예시는 order 마이크로 서비스 )
 
-#### Request.java
+#### order.java
 
 ```
-package onlinebank;
+package fruitsorenew;
 
 import javax.persistence.*;
 import org.springframework.beans.BeanUtils;
@@ -114,36 +120,62 @@ import java.util.List;
 import java.util.Date;
 
 @Entity
-@Table(name="Request_table")
-public class Request {
+@Table(name="Order_table")
+public class Order {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
-    private String accountNo;
-    private String requestId;
-    private String requestName;
-    private Date requestDate;
-    private Integer amountOfMoney;
-    private String userId;
-    private String userName;
-    private String userPassword;
+    private Long orderId;
+    private Long userId;
+    private String prodNm;
+    private Integer qty;
+    private Integer price;
+    private String address;
+    private String orderStatus;
 
-    public Long getId() {
-        return id;
+    @PostPersist
+    public void onPostPersist(){
+        OrderPlaced orderPlaced = new OrderPlaced();
+        BeanUtils.copyProperties(this, orderPlaced);
+        orderPlaced.publishAfterCommit();
+
+        //Following code causes dependency to external APIs
+        // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
+
+        fruitsorenew.external.Payment payment = new fruitsorenew.external.Payment();
+        // mappings goes here
+        payment.setOrderId(this.getOrderId());
+        payment.setUserId(this.getUserId());
+        payment.setPrice(this.getPrice());
+        payment.setPayStatus("결제요청");
+        OrderApplication.applicationContext.getBean(fruitsorenew.external.PaymentService.class)
+            .payment(payment);
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getAccountNo() {
-        return accountNo;
+    @PostRemove
+    public void onPostRemove(){
+        OrderCanceled orderCanceled = new OrderCanceled();
+        BeanUtils.copyProperties(this, orderCanceled);
+        orderCanceled.publishAfterCommit();
     }
 
-    public void setAccountNo(String accountNo) {
-        this.accountNo = accountNo;
+    public Long getOrderId() {
+        return orderId;
     }
-    
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    public String getProdNm() {
+        return prodNm;
+    }
     ...
 ```
 
@@ -170,7 +202,10 @@ public interface RequestRepository extends PagingAndSortingRepository<Request, L
 #### request 서비스의 요청처리
 
 ```
-http request:8080/requests accountNo="1111" requestId="01" requestName="Deposit" amountOfMoney=10000 userId="1@sk.com" userName="sam" userPassword="1234"  
+http order:8080/orders orderId="2" userId="7181" prodNm="사과" qty=2 price=5000  address="경기도 성남시" orderStatus="주문요청"  
+http order:8080/orders orderId="2" userId="7181" prodNm="사과" qty="2" price="5000"  address="경기도 성남시" orderStatus="주문요청"
+@@@@ int형 확인
+
 ```
 
 - 모든 요청은 request 에서 처리하는 관계로 다른 마이크로시스템에 접속하지 않는다. 
@@ -178,9 +213,97 @@ http request:8080/requests accountNo="1111" requestId="01" requestName="Deposit"
 #### 요청상태 확인
 
 ```
-http http://request:8080/requests/1
+http http://request:8080/orders/1
 ```
 *****
+
+
+### 동기식 호출과 Fallback 처리
+
+분석단계에서의 조건 중 하나로 주문(order)-> 결제(payment) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리한다. 
+호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출한다.
+
+1. 결제서비스를 호출하기 위하여 FeignClient 를 이용하여 Service 대행 인터페이스 구현
+
+#### PaymentService.java
+
+```
+@FeignClient(name="payment", url="http://localhost:8085", fallback = PaymentServiceFallback.class)
+public interface PaymentService {
+    @RequestMapping(method= RequestMethod.GET, path="/payments")
+    public void payment(@RequestBody Payment payment);
+}
+```
+
+2. 주문 생성 직후(@PostPersist) 결제를 요청하도록 처리 Order.java Entity Class 내 추가
+
+#### Order.java
+
+```
+package fruitsorenew;
+
+import javax.persistence.*;
+import org.springframework.beans.BeanUtils;
+import java.util.List;
+import java.util.Date;
+
+@Entity
+@Table(name="Order_table")
+public class Order {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long orderId;
+    private Long userId;
+    private String prodNm;
+    private Integer qty;
+    private Integer price;
+    private String address;
+    private String orderStatus;
+
+    @PostPersist
+    public void onPostPersist(){
+        OrderPlaced orderPlaced = new OrderPlaced();
+        BeanUtils.copyProperties(this, orderPlaced);
+        orderPlaced.publishAfterCommit();
+
+        fruitsorenew.external.Payment payment = new fruitsorenew.external.Payment();
+        payment.setOrderId(this.getOrderId());
+        payment.setUserId(this.getUserId());
+        payment.setPrice(this.getPrice());
+        payment.setPayStatus("결제요청");
+        OrderApplication.applicationContext.getBean(fruitsorenew.external.PaymentService.class)
+            .payment(payment);
+    }
+
+    @PostRemove
+    public void onPostRemove(){
+        OrderCanceled orderCanceled = new OrderCanceled();
+        BeanUtils.copyProperties(this, orderCanceled);
+        orderCanceled.publishAfterCommit();
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    public String getProdNm() {
+        return prodNm;
+    }
+
+```
+*****
+
 
 ### 폴리글랏 퍼시스턴스
 
@@ -313,69 +436,9 @@ ENTRYPOINT ["java","-Xmx400M","-Djava.security.egd=file:/dev/./urandom","-jar","
 
 ```
 
-### 동기식 호출 (구현)
 
-분석단계에서의 조건 중 하나로 요청(request)->인증(auth) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 
 
-처리하기로 하였다. 호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 
 
-이용하여 호출하도록 한다. 
-
-1. 결제서비스를 호출하기 위하여 FeignClient 를 이용하여 Service 대행 인터페이스 구현
-
-#### AuthService.java
-
-```
-@FeignClient(name="auths", url="http://auth:8080")
-public interface AuthService {
-    @RequestMapping(method= RequestMethod.GET, path="/auths")
-    public void requestAuth(@RequestBody Auth auth);
-
-}
-```
-
-2. 요청을 받은 직후(@PostPersist) 인증을 요청하도록 처리
-
-#### Request.java
-
-```
-@PostPersist
-    public void onPostPersist(){
-
-        // requestId
-        // "01" : Deposit
-        // "02" : Withdraw
-        // "03" : Balance
-        // "04" : Transaction  
-        // "05" : addAccount
-        // "06" : deleteAccount
-        if( "01".equals( getRequestId() ) || // Deposit
-            "02".equals( getRequestId() ) || // Withdraw
-            "05".equals( getRequestId() ) || // addAccount
-            "06".equals( getRequestId() ) ){ // deleteAccount 
-            onlinebank.external.Auth auth = new onlinebank.external.Auth();
-            BeanUtils.copyProperties(this, auth);
-            auth.setBankRequestId( getId() );
-            BankRequestApplication.applicationContext.getBean(onlinebank.external.AuthService.class).requestAuth(auth);
-        }
-        
-        // Balance
-        if( "03".equals( getRequestId() ) ){ 
-            BalanceRequested balanceRequested = new BalanceRequested();
-            BeanUtils.copyProperties(this, balanceRequested);
-            balanceRequested.setBankRequestId( getId() );
-            balanceRequested.publish();
-        }
-
-        // Transaction
-        if( "04".equals( getRequestId() ) ){ 
-            TransactionRequested transactionRequested = new TransactionRequested();
-            BeanUtils.copyProperties(this, transactionRequested);
-            transactionRequested.publishAfterCommit();
-        }
-    }
-```
-*****
 
 ### 비동기식 호출 
 
