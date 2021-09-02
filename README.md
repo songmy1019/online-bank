@@ -213,7 +213,7 @@ http order:8080/orders orderId="2" userId="7181" prodNm="사과" qty="2" price="
 #### 요청상태 확인
 
 ```
-http http://request:8080/orders/1
+http http://order:8080/orders/1
 ```
 *****
 
@@ -535,29 +535,7 @@ Java 16 버전 사용을 위해 image도 openjdk16 을 사용함.
 FROM khipu/openjdk16-alpine
 COPY target/*SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-Xmx400M","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--spring.profiles.active=docker"]
-
-```
-
-
-
-
-
-### 비동기식 호출 
-
-결제성공 후 배달서비스로 이를 알려주는 행위는 동기식이 아니라 비 동기식으로 처리하여 
-
-배달 처리를 위하여 결제 기능이 블로킹 되지 않아도록 처리한다.
-
-1. 이를 위하여 인증이력에 기록을 남긴 후에 곧바로 인증완료 되었다는 도메인 이벤트를 카프카로 송출한다(Publish)
-
-#### Auth.java
-
-```
-package onlinebank;
-
-@Entity
-@Table(name="Auth_table")
+ENTRYPOINT ["java","-Xmx400M","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--
 public class Auth {
 
     @PrePersist
@@ -655,7 +633,7 @@ public class PolicyHandler{
 
 1. Spring FeignClient + Hystrix 옵션을 사용하여 구현
 
-2. 요청-인증시 Request/Response 로 연동하여 구현이 되어있으며 요청이 과도할 경우 CB를 통하여 장애격리 
+2. 주문-걸제시 Request/Response 로 연동하여 구현이 되어있으며 요청이 과도할 경우 CB를 통하여 장애격리 
 
 3. Hystrix 를 설정: 요청처리 쓰레드에서 처리시간이 610 밀리가 넘어서기 시작하여 어느정도 유지되면 
 
@@ -672,74 +650,35 @@ hystrix:
   command:
     default:
       execution.isolation.thread.timeoutInMilliseconds: 610
-```
-
-4. 인증 서비스의 임의 부하 처리 
-
-#### Auth.java (Entity)
-
-```
-    @PrePersist
-    public void onPrePersist(){  
-
-        ...
         
-        try {
-	    // 인증 데이터 저장 전 처리 시간을 400ms ~ 620ms 강제 지연
-            Thread.currentThread().sleep((long) (400 + Math.random() * 220));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+```
+
+4. 결제 서비스의 임의 부하 처리 
+
+#### Payment.java (Entity)
+
+```
+    @PostPersist
+    public void onPostPersist(){
+     ...
+		try {
+		    Thread.currentThread().sleep((long) (400 + Math.random() * 220));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
+    
 ```
 
 5. 부하테스터 seige 툴을 통한 서킷 브레이커 동작 확인
-
-root@siege:/# siege -v -c100 -t90S -r10 --content-type "application/json" 'http://request:8080/requests POST {"accountNo":"1111","requestId":"01","requestName":"Deposit","amountOfMoney":10000,"userId":"1@sk.com","userName":"sam","userPassword":"1234"}'
 ( 동시사용자 100명, 90초간 진행 )
 
+root@siege:/# siege -v -c100 -t90S -r10 --content-type "application/json" 'http://request:8080/orders POST {"orderId"="001", "prodNm"="수박"}'
+
 ```
-HTTP/1.1 500     4.46 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     3.88 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     3.69 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     3.88 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     3.85 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     3.60 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     3.76 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     4.09 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     3.62 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     4.14 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     3.59 secs:     250 bytes ==> POST http://request:8080/requests
+&&&&결과 넣기
 
-HTTP/1.1 201     4.40 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.33 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.45 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.35 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.38 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.45 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.51 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.57 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.02 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.63 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.05 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.03 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.01 secs:     370 bytes ==> POST http://request:8080/requests
 
-HTTP/1.1 500     4.31 secs:     250 bytes ==> POST http://request:8080/requests
-HTTP/1.1 500     4.14 secs:     250 bytes ==> POST http://request:8080/requests
-
-HTTP/1.1 201     4.09 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.15 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.14 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.10 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.15 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.24 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.20 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.24 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.26 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.16 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.30 secs:     370 bytes ==> POST http://request:8080/requests
-HTTP/1.1 201     4.20 secs:     370 bytes ==> POST http://request:8080/requests
 HTTP/1.1 201     4.24 secs:     370 bytes ==> POST http://request:8080/requests
 HTTP/1.1 201     4.29 secs:     370 bytes ==> POST http://request:8080/requests
 HTTP/1.1 500     4.32 secs:     250 bytes ==> POST http://request:8080/requests
@@ -764,17 +703,16 @@ Shortest transaction:           0.01
 *****
 
 ### 오토스케일 아웃
+@@@@@@@ 이 부분 테스트 필요
 
-#### 앞서 CB 는 시스템을 안정되게 운영할 수 있게 해줬지만 사용자의 요청을 100% 받아들여주지 못했기 때문에 
-
-이에 대한 보완책으로 자동화된 확장 기능을 적용하고자 한다.
-
+#### 앞서 CB 는 시스템을 안정되게 운영할 수 있게 해줬지만 사용자의 요청을 100% 받아들여주지 못했기 때문에 이에 대한 보완책으로 자동화된 확장 기능을 적용하고자 한다.
 결제서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 
-
 설정은 CPU 사용량이 50프로를 넘어서면 replica 를 10개까지 늘려준다
 
 ```
-root@labs-579721623:/home/project/online-bank/BankAuthentication# kubectl autoscale deployment request --cpu-percent=50 --min=1 --max=10
+@@@@@@ 경로 명령어 수정 필요
+
+root@labs-:/home/project/fruitstore/order# kubectl autoscale deployment order --cpu-percent=50 --min=1 --max=10
 horizontalpodautoscaler.autoscaling/request autoscaled
 ```
 
