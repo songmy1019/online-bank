@@ -26,36 +26,31 @@
 *****
 
 ## 분석/설계
-![image](https://user-images.githubusercontent.com/27180840/130163209-8c3d6c43-6bd1-44c8-aef7-3cf6d2cfa832.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130163166-d6f39ea8-dc75-4764-be19-3c537b6a9df9.png)
+### AS-IS 조직 (Horizontally-Aligned)
 
-![image](https://user-images.githubusercontent.com/27180840/130163779-d249160e-aee1-4cad-8a2b-4c6365d54eba.png)
+![image](https://user-images.githubusercontent.com/27180840/131845338-b5e0c548-1070-419e-b902-9f8ca8de1fd8.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130163801-55cb9ee1-0c9b-45e6-a721-60da2a2bdc2a.png)
+### TO-BE 조직 (Vertically-Aligned)
 
-![image](https://user-images.githubusercontent.com/27180840/130163815-2ec94016-126e-4ea9-a2ce-c6054385336a.png)
+![image](https://user-images.githubusercontent.com/27180840/131845668-3921794c-0b8d-4bae-84b9-ab0bd7b2fb5a.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130163823-a8f74f4a-2f5f-416d-a3a4-7c9afee15f44.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130163838-eac8aefb-9cd7-46c0-b2d1-761a32d3282f.png)
+### Event Storming 결과
+MSAEz 로 모델링한 이벤트스토밍 결과:
+http://www.msaez.io/#/storming/3CCWjZexX3Y7Ypm85RPzPTQIPLg1/8cf40a06f13d8f600029032d3f313efb
 
-![image](https://user-images.githubusercontent.com/27180840/130164013-25e67228-ab6e-4a3e-97ad-26301a3e088d.png)
+### 이벤트스토밍 - Event
 
-![image](https://user-images.githubusercontent.com/27180840/130164024-cf068293-6f9e-4205-83ed-ff0271d39a25.png)
 
-![image](https://user-images.githubusercontent.com/27180840/130164068-a85c1014-a762-4d2d-b017-30c10cd4335f.png)
+## 분석/설계
 
-![image](https://user-images.githubusercontent.com/27180840/130178299-14fd56d2-ae8b-47be-b328-740637772e23.png)
-
-![image](https://user-images.githubusercontent.com/27180840/130164096-53c0a44f-cef9-48a2-8ddc-256e66396a0e.png)
 비기능적 요구사항 coverage 체크
 1. 업무 요청이 실패한 경우 요청 내역을 삭제한다 (Correlation)
 2. 개인정보 인증 대상 업무를 선택한 경우 인증 실패 시 서비스 이용이 불가하다 (Sync)
 3. 잔액 조회, 거래내역 조회 서비스는 24시간 이용이 가능하다 (Async 호출-event-driven)
 4. 입/출금, 계좌 개설/폐쇄 서비스가 과중되면 잠시 후에 하도록 유도한다. (Circuit breaker, fallback)
 5. 고객이 최종 거래 내역, 계좌 상태를 계속 확인 가능해야 한다 (CQRS)
-![image](https://user-images.githubusercontent.com/27180840/130178255-bb142282-4eb6-4487-b6b0-ffab6e990f28.png)
 
 
 ## 구현
