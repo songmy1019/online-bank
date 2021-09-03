@@ -216,8 +216,7 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 #### request 서비스의 요청처리
 
 ```
-http order:8080/orders orderId="2" userId="7181" prodNm="사과" qty=2 price=5000  address="경기도 성남시" orderStatus="주문요청"  
-http order:8080/orders orderId="2" userId="7181" prodNm="사과" qty="2" price="5000"  address="경기도 성남시" orderStatus="주문요청"
+http order:8080/orders orderId="2" userId="7181" prodNm="사과" qty=2 price=5000  address="경기도 성남시" orderStatus="주문신청"  
 
 ```
 
@@ -227,7 +226,7 @@ http order:8080/orders orderId="2" userId="7181" prodNm="사과" qty="2" price="
 ```
 http http://order:8080/orders/107
 
-root@siege:/# http order:8080/orders/107
+@ root@siege:/# http order:8080/orders/107
 HTTP/1.1 201 
 Content-Type: application/json;charset=UTF-8
 Date: Fri, 03 Sep 2021 02:01:31 GMT
@@ -251,6 +250,56 @@ Transfer-Encoding: chunked
     "userId": 7181
 }
 
+@ root@siege:/# http payment:8080/payments/17
+HTTP/1.1 200 
+Content-Type: application/hal+json;charset=UTF-8
+Date: Fri, 03 Sep 2021 02:23:22 GMT
+Transfer-Encoding: chunked
+
+{
+    "_links": {
+        "payment": {
+            "href": "http://payment:8080/payments/17"
+        },
+        "self": {
+            "href": "http://payment:8080/payments/17"
+        }
+    },
+    "orderId": 5,
+    "orderStatus": null,
+    "payStatus": "결제요청",
+    "price": 50000,
+    "prodId": null,
+    "qty": null,
+    "userId": 7181
+}
+
+@http://delivery:8080/deliveries/38
+
+HTTP/1.1 201 
+Content-Type: application/json;charset=UTF-8
+Date: Fri, 03 Sep 2021 02:30:45 GMT
+Location: http://delivery:8080/deliveries/38
+Transfer-Encoding: chunked
+
+{
+    "_links": {
+        "delivery": {
+            "href": "http://delivery:8080/deliveries/38"
+        },
+        "self": {
+            "href": "http://delivery:8080/deliveries/38"
+        }
+    },
+    "address": "경기도 성남시",
+    "deliveryStatus": "배송시작",
+    "orderId": 5,
+    "orderStatus": null,
+    "payStatus": null,
+    "prodId": null,
+    "qty": 5,
+    "userId": 7181
+}
 ```
 *****
 
