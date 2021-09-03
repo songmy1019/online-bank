@@ -479,6 +479,7 @@ public class MyPageViewHandler {
     @Autowired
     private MyPageRepository myPageRepository;
 
+    //주문시 신규 생성
     @StreamListener(KafkaProcessor.INPUT)
     public void whenOrderPlaced_then_CREATE_1 (@Payload OrderPlaced orderPlaced) {
         try {
@@ -501,6 +502,7 @@ public class MyPageViewHandler {
             e.printStackTrace();
         }
     }
+    //결제승인시 결제 정보 업데이트
     @StreamListener(KafkaProcessor.INPUT)
     public void whenPaymentApproved_then_CREATE_2 (@Payload PaymentApproved paymentApproved) {
         try {
@@ -521,7 +523,7 @@ public class MyPageViewHandler {
         }
     }
 
-
+    //결제 취소때 결제상태 업데이트
     @StreamListener(KafkaProcessor.INPUT)
     public void whenPaymentCanceled_then_UPDATE_1(@Payload PaymentCanceled paymentCanceled) {
         try {
@@ -542,6 +544,7 @@ public class MyPageViewHandler {
             e.printStackTrace();
         }
     }
+    // 주문 취소때 주문상태 업데이트
     @StreamListener(KafkaProcessor.INPUT)
     public void whenOrderCanceled_then_UPDATE_2(@Payload OrderCanceled orderCanceled) {
         try {
@@ -564,7 +567,6 @@ public class MyPageViewHandler {
     }
 
 }
-
 
 ```
 
