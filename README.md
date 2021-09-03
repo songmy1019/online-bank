@@ -95,9 +95,7 @@ http://www.msaez.io/#/storming/3CCWjZexX3Y7Ypm85RPzPTQIPLg1/113c0155f10101dd4e75
 ## 구현
 
 분석/설계 단계에서 도출된 헥사고날 아키텍처에 따라, 각 BC별로 대변되는 마이크로 서비스들을 스프링부트로 구현하였다. 
-구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (서비스 포트는 8081, 8082, 8083, 8088 이다)
-
-@@@@@@@ 포트 확인 필요!!!! 
+구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (서비스 포트는 8081, 8082, 8087, 8084, 8088 이다)
 
 ```
 cd order
@@ -153,11 +151,7 @@ public class Order {
         BeanUtils.copyProperties(this, orderPlaced);
         orderPlaced.publishAfterCommit();
 
-        //Following code causes dependency to external APIs
-        // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
-
         fruitsorenew.external.Payment payment = new fruitsorenew.external.Payment();
-        // mappings goes here
         payment.setOrderId(this.getOrderId());
         payment.setUserId(this.getUserId());
         payment.setPrice(this.getPrice());
@@ -191,7 +185,9 @@ public class Order {
         return prodNm;
     }
     ...
+    
 ```
+
 
 2. Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 다양한 
 데이터소스 유형 (RDB or NoSQL) 에 대한 별도의 처리가 없도록 데이터 접근 어댑터를 
@@ -219,7 +215,86 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 http order:8080/orders orderId="2" userId="7181" prodNm="사과" qty=2 price=5000  address="경기도 성남시" orderStatus="주문신청"  
 
 ```
+#### Gateway 적용
+API GateWay를 통하여 마이크로 서비스들의 진입점을 통일할 수 있다. 다음과 같이 GateWay를 적용하였다.
 
+```
+server:
+  port: 8089
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: order
+          uri: http://localhost:8086
+          predicates:
+            - Path=/orders/** 
+        - id: mypage
+          uri: http://localhost:8082
+          predicates:
+            - Path= /myPages/**
+        - id: payment
+          uri: http://localhost:8087
+          predicates:
+            - Path=/payments/** 
+        - id: delivery
+          uri: http://localhost:8084
+          predicates:
+            - Path=/deliveries/** 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: order
+          uri: http://order:8080
+          predicates:
+            - Path=/orders/** 
+        - id: mypage
+          uri: http://mypage:8080
+          predicates:
+            - Path= /myPages/**
+        - id: payment
+          uri: http://payment:8080
+          predicates:
+            - Path=/payments/** 
+        - id: delivery
+          uri: http://delivery:8080
+          predicates:
+            - Path=/deliveries/** 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
+  
+  ```
 
 #### 요청상태 확인
 
