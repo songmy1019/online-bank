@@ -640,7 +640,7 @@ hystrix:
 5. 부하테스터 seige 툴을 통한 서킷 브레이커 동작 확인
 ( 동시사용자 100명, 90초간 진행 )
 
-root@siege:/# siege -v -c100 -t90S -r10 --content-type "application/json" 'http://request:8080/orders POST {"orderId"="001", "prodNm"="수박"}'
+root@siege:/# siege -v -c100 -t90S -r10 --content-type "application/json" 'http://order:8080/orders POST {"orderId"="001", "prodNm"="수박"}'
 
 ```
 
@@ -671,7 +671,7 @@ payment   Deployment/payment   <unknown>/50%   1         10        1          15
 
 #### 부하 테스트 진행
 
-root@siege:/# siege -v -c100 -t90S -r10 --content-type "application/json" 'http://request:8080/requests POST {"accountNo":"1111","requestId":"01","requestName":"Deposit","amountOfMoney":10000,"userId":"1@sk.com","userName":"sam","userPassword":"1234"}'
+root@siege:/# siege -v -c100 -t90S -r10 --content-type "application/json" 'http://order:8080/orders POST {"orderId":"005", "userId":"07181", "qty":5, "price":50000, "address":"경기도 성남시", "orderStatus":"주문신청됨"}'
 ( 동시사용자 100명, 90초간 진행 )
 
 ```
