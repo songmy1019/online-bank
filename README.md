@@ -218,16 +218,39 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 ```
 http order:8080/orders orderId="2" userId="7181" prodNm="사과" qty=2 price=5000  address="경기도 성남시" orderStatus="주문요청"  
 http order:8080/orders orderId="2" userId="7181" prodNm="사과" qty="2" price="5000"  address="경기도 성남시" orderStatus="주문요청"
-@@@@ int형 확인
 
 ```
 
-- 모든 요청은 request 에서 처리하는 관계로 다른 마이크로시스템에 접속하지 않는다. 
 
 #### 요청상태 확인
 
 ```
-http http://order:8080/orders/1
+http http://order:8080/orders/107
+
+root@siege:/# http order:8080/orders/107
+HTTP/1.1 201 
+Content-Type: application/json;charset=UTF-8
+Date: Fri, 03 Sep 2021 02:01:31 GMT
+Location: http://order:8080/orders/107
+Transfer-Encoding: chunked
+
+{
+    "_links": {
+        "order": {
+            "href": "http://order:8080/orders/107"
+        },
+        "self": {
+            "href": "http://order:8080/orders/107"
+        }
+    },
+    "address": "경기도 성남시",
+    "orderStatus": "주문신청",
+    "price": 50000,
+    "prodId": 200,
+    "qty": 5,
+    "userId": 7181
+}
+
 ```
 *****
 
@@ -421,57 +444,48 @@ public class MyPageViewHandler {
 
 ```
 
-계좌 서비스에서는 결제승인 이벤트에 대해서 이를 수신하여 자신의 정책을 처리하도록 PolicyHandler 를 구현한다
+배송 서비스에서는 결제승인 이벤트에 대해서 이를 수신하여 자신의 정책을 처리하도록 PolicyHandler 를 구현한다
 
 #### PolicyHandler.java
 
 ```
-package onlinebank;
+package fruitsorenew;
+
+import fruitsorenew.config.kafka.KafkaProcessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PolicyHandler{
-    @Autowired AccountRepository accountRepository;
+    @Autowired DeliveryRepository deliveryRepository;
 
-    // 인증 성공시 정책 수신
     @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverAuthCertified_RecieveAccountRequest(@Payload AuthCertified authCertified){
+    public void wheneverPaymentApproved_Acceptdelivery(@Payload PaymentApproved paymentApproved){
 
-        if(!authCertified.validate()) return;
-        
-        // 입금처리
-        if( "01".equals( authCertified.getRequestId() ) ){
+        if(!paymentApproved.validate()) return;
 
-           // 입금계좌가 없을 경우 
-           if( accountRepository.findByAccountNo( authCertified.getAccountNo() ) == null ){
- 
-               AccountRequestCancelled accountRequestCancelled = new AccountRequestCancelled();              
-               accountRequestCancelled.setAccountNo(authCertified.getAccountNo());
-               accountRequestCancelled.setBankRequestId(authCertified.getBankRequestId());
-               accountRequestCancelled.setMessage("Account Not Exist");
-               accountRequestCancelled.setRequestId(authCertified.getRequestId());
-               accountRequestCancelled.setRequestName(authCertified.getRequestName());
-               accountRequestCancelled.setRequestMoney(authCertified.getAmountOfMoney());
-               accountRequestCancelled.setRequestDate(new Date());
-               
-               accountRequestCancelled.publish();
-           }
-           // 입금계좌가 있을 경우
-           else{
-
-               Account account = accountRepository.findByAccountNo( authCertified.getAccountNo() );
-               account.setAccountNo(authCertified.getAccountNo());
-               account.setRequestId(authCertified.getRequestId());
-               account.setRequestName(authCertified.getRequestName());
-               account.setRequestMoney(authCertified.getAmountOfMoney());
-               account.setAmountOfMoney(account.getAmountOfMoney() + authCertified.getAmountOfMoney() );
-               account.setRequestDate(new Date());
-               accountRepository.save(account);
-           }
-        }
-
-        ...
+        System.out.println("\n\n##### listener Acceptdelivery : " + paymentApproved.toJson() + "\n\n");
 
     }
+    @StreamListener(KafkaProcessor.INPUT)
+    public void wheneverPaymentCanceled_CancleDelivery(@Payload PaymentCanceled paymentCanceled){
+
+        if(!paymentCanceled.validate()) return;
+
+        System.out.println("\n\n##### listener CancleDelivery : " + paymentCanceled.toJson() + "\n\n");
+
+
+    }
+
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void whatever(@Payload String eventString){}
+
+
 }
 ```
 *****
