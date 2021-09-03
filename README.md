@@ -667,14 +667,109 @@ NAME      REFERENCE            TARGETS         MINPODS   MAXPODS   REPLICAS   AG
 order     Deployment/order     <unknown>/50%   1         10        1          118s
 payment   Deployment/payment   <unknown>/50%   1         10        1          15m
 
+
+
+root@labs--1339476173:/home/project/fruitstorenew# cd payment
+root@labs--1339476173:/home/project/fruitstorenew/payment# cd kubernetes
+
+root@labs--1339476173:/home/project/fruitstorenew/payment/kubernetes# kubectl apply -f deployment.yml
+error: error parsing deployment.yml: error converting YAML to JSON: yaml: line 47: did not find expected key
+
+root@labs--1339476173:/home/project/fruitstorenew/payment/kubernetes# kubectl get pod
+NAME                         READY   STATUS             RESTARTS   AGE
+delivery-64f989599d-wsnwj    1/1     Running            0          24h
+gateway-749574fc88-jf59x     1/1     Running            0          24h
+homepage-69685b8f76-99f9x    1/1     Running            0          23h
+mypage-f95b4876c-fv5dw       1/1     Running            0          6h32m
+order-5578d978b5-knl4g       1/1     Running            0          21h
+payment-789689f8dd-x9f8r     1/1     Running            0          24h
+payment-797cf7dc88-xtv56     0/2     CrashLoopBackOff   2          15s
+php-apache-d4cf67d68-nlddz   1/1     Running            0          10m
+siege                        1/1     Running            0          24h
+
+root@labs--1339476173:/home/project/fruitstorenew/payment/kubernetes# kubectl get pod
+NAME                         READY   STATUS             RESTARTS   AGE
+delivery-64f989599d-wsnwj    1/1     Running            0          24h
+gateway-749574fc88-jf59x     1/1     Running            0          24h
+homepage-69685b8f76-99f9x    1/1     Running            0          23h
+mypage-f95b4876c-fv5dw       1/1     Running            0          6h42m
+order-849df6cfcf-mkt52       1/1     Running            0          96s
+payment-65b8847957-nr6sb     0/1     CrashLoopBackOff   5          5m21s
+php-apache-d4cf67d68-nlddz   1/1     Running            0          20m
+siege                        1/1     Running            0          24h
+
+root@labs--1339476173:/home/project/fruitstorenew/payment/kubernetes# kubectl get hpa
+NAME         REFERENCE               TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+order        Deployment/order        94%/50%         1         10        2          136m
+payment      Deployment/payment      <unknown>/50%   1         10        1          149m
+php-apache   Deployment/php-apache   0%/50%          1         10        1          26m
+
 ```
 
 #### 부하 테스트 진행
+
+
+```
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "500Mi"
+              cpu: "500m"
+```
 
 root@siege:/# siege -v -c100 -t90S -r10 --content-type "application/json" 'http://order:8080/orders POST {"orderId":"005", "userId":"07181", "qty":5, "price":50000, "address":"경기도 성남시", "orderStatus":"주문신청됨"}'
 ( 동시사용자 100명, 90초간 진행 )
 
 ```
+root@siege:/# siege -v -c100 -t30S -r10 --content-type "application/json" 'http://order:8080/orders POST {"orderId":"005", "userId":"07181", "qty":5, "price":50000, "address":"경기도 성남시", "orderStatus":"주문신청됨"}'
+[error] CONFIG conflict: selected time and repetition based testing
+defaulting to time-based testing: 30 seconds
+** SIEGE 4.0.4
+** Preparing 100 concurrent users for battle.
+The server is now under siege...
+HTTP/1.1 500     5.05 secs:     248 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     5.83 secs:     248 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     6.39 secs:     248 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     7.47 secs:     248 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     8.51 secs:     248 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.02 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.01 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.07 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.07 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.01 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.00 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.01 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.01 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.00 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.01 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.08 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.07 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.01 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.01 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.00 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.00 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.01 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.01 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.00 secs:     820 bytes ==> POST http://order:8080/orders
+HTTP/1.1 500     0.00 secs:     820 bytes ==> POST http://order:8080/orders
+
+Lifting the server siege...
+Transactions:                      0 hits
+Availability:                   0.00 %
+Elapsed time:                  29.55 secs
+Data transferred:               0.08 MB
+Response time:                  0.00 secs
+Transaction rate:               0.00 trans/sec
+Throughput:                     0.00 MB/sec
+Concurrency:                   22.84
+Successful transactions:           0
+Failed transactions:             123
+Longest transaction:           28.87
+Shortest transaction:           0.00
+ 
+
 ```
 
 #### Terminal 을 추가하여 오토스케일링 현황을 모니터링 한다. ( watch kubectl get pod )
