@@ -779,4 +779,79 @@ spec:
     ```
 2. 명령어로 실행
 
+```
+root@labs--1339476173:/home/project/fruitstorenew/delivery# export ECR=052937454741.dkr.ecr.ap-northeast-1.amazonaws.com
+
+#package
+root@labs--1339476173:/home/project/fruitstorenew/delivery# mvn package -Dmaven.test.skip=true
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< fruitsorenew:delivery >------------------------
+[INFO] Building delivery 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:3.1.0:resources (default-resources) @ delivery ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ delivery ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 11 source files to /home/project/fruitstorenew/delivery/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:3.1.0:testResources (default-testResources) @ delivery ---
+[INFO] Not copying test resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.1:testCompile (default-testCompile) @ delivery ---
+[INFO] Not compiling test sources
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.22.2:test (default-test) @ delivery ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:3.1.2:jar (default-jar) @ delivery ---
+[INFO] Building jar: /home/project/fruitstorenew/delivery/target/delivery-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:2.1.9.RELEASE:repackage (repackage) @ delivery ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.951 s
+[INFO] Finished at: 2021-09-03T05:31:26Z
+[INFO] ------------------------------------------------------------------------
+
+#도커 빌드
+root@labs--1339476173:/home/project/fruitstorenew/delivery# docker build -t ${ECR}/u8-delivery:latest .
+Sending build context to Docker daemon 59.79 MB
+Step 1/4 : FROM openjdk:8u212-jdk-alpine
+ ---> a3562aa0b991
+Step 2/4 : COPY target/*SNAPSHOT.jar app.jar
+ ---> c62bdbf2fbc8
+Step 3/4 : EXPOSE 8080
+ ---> Running in 55f7b5f911c0
+Removing intermediate container 55f7b5f911c0
+ ---> 6993fba06c53
+Step 4/4 : ENTRYPOINT ["java","-Xmx400M","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--spring.profiles.active=docker"]
+ ---> Running in 9c901ba326ae
+Removing intermediate container 9c901ba326ae
+ ---> b695794a3cb1
+Successfully built b695794a3cb1
+Successfully tagged 052937454741.dkr.ecr.ap-northeast-1.amazonaws.com/u8-delivery:latest
+
+#
+root@labs--1339476173:/home/project/fruitstorenew/delivery# docker push ${ECR}/u8-delivery:latest
+The push refers to repository [052937454741.dkr.ecr.ap-northeast-1.amazonaws.com/u8-delivery]
+7c8a2cd7547e: Pushed 
+ceaf9e1ebef5: Layer already exists 
+9b9b7f3d56a0: Layer already exists 
+f1b5933fe4b5: Layer already exists 
+latest: digest: sha256:9d4843bc776d1554171e412cc893b6aeb8678c8c8d7ec0d8951d0dd07d05c2b3 size: 1159
+root@labs--1339476173:/home/project/fruitstorenew/delivery# 
+
+```
     
