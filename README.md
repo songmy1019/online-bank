@@ -249,7 +249,7 @@ public interface PaymentService {
 }
 ```
 
-2. 주문 생성 직후(@PostPersist) 결제를 요청하도록 처리 Order.java Entity Class 내 추가
+2. 주문 생성 직후(@PostPersist) 결제를 요청하도록 처리 Order.java Entity Class 내 추가 (Correlation)
 
 #### Order.java
 
